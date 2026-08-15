@@ -8,6 +8,8 @@ interface PartyEntryProps {
 
 type EntryStage = 'doors' | 'lights' | 'reveal' | 'welcome';
 
+// Removed SVGs to use pure background art
+
 export function PartyEntry({ onComplete }: PartyEntryProps) {
   const [stage, setStage] = useState<EntryStage>('doors');
   const [doorsOpen, setDoorsOpen] = useState(false);
@@ -24,10 +26,10 @@ export function PartyEntry({ onComplete }: PartyEntryProps) {
 
   return (
     <div className="party-entry">
-      {/* Nightclub scene behind doors */}
       <div className="pe-scene">
         <div className="pe-scene-bg" />
-        {/* Light beams that turn on sequentially */}
+
+        {/* Light beams */}
         <AnimatePresence>
           {(stage === 'lights' || stage === 'reveal' || stage === 'welcome') && (
             <>
@@ -45,44 +47,7 @@ export function PartyEntry({ onComplete }: PartyEntryProps) {
           )}
         </AnimatePresence>
 
-        {/* DJ silhouette */}
-        <AnimatePresence>
-          {(stage === 'reveal' || stage === 'welcome') && (
-            <motion.div
-              className="pe-dj-silhouette"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              🎧
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Crowd silhouettes */}
-        <AnimatePresence>
-          {stage === 'welcome' && (
-            <motion.div
-              className="pe-crowd"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              {['🕺', '💃', '🙌', '🕺', '💃', '🙌', '🕺', '💃'].map((emoji, i) => (
-                <motion.span
-                  key={i}
-                  className="pe-crowd-person"
-                  style={{ '--pi': i } as React.CSSProperties}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.08 }}
-                >
-                  {emoji}
-                </motion.span>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* Removed CSS generated peoples for a cleaner look */}
 
         {/* Text overlays */}
         <AnimatePresence mode="wait">
@@ -95,7 +60,7 @@ export function PartyEntry({ onComplete }: PartyEntryProps) {
               exit={{ opacity: 0, scale: 1.2 }}
               transition={{ type: 'spring', stiffness: 200 }}
             >
-              YOU'RE IN. 🔥
+              YOU'RE IN
             </motion.div>
           )}
           {stage === 'welcome' && (
@@ -114,7 +79,7 @@ export function PartyEntry({ onComplete }: PartyEntryProps) {
         </AnimatePresence>
       </div>
 
-      {/* The two doors */}
+      {/* Left door */}
       <motion.div
         className="pe-door pe-door--left"
         animate={{ x: doorsOpen ? '-100%' : '0%' }}
@@ -124,13 +89,14 @@ export function PartyEntry({ onComplete }: PartyEntryProps) {
           <div className="pe-door-handle pe-door-handle--right" />
           <div className="pe-door-panel" />
           <div className="pe-door-logo">
-            <span>🎉</span>
+            <span className="pe-door-monogram">PW</span>
             <span className="pe-door-text">PARTY</span>
             <span className="pe-door-text">WALE</span>
           </div>
         </div>
       </motion.div>
 
+      {/* Right door */}
       <motion.div
         className="pe-door pe-door--right"
         animate={{ x: doorsOpen ? '100%' : '0%' }}
@@ -140,7 +106,7 @@ export function PartyEntry({ onComplete }: PartyEntryProps) {
           <div className="pe-door-handle pe-door-handle--left" />
           <div className="pe-door-panel" />
           <div className="pe-door-logo">
-            <span>🎉</span>
+            <span className="pe-door-monogram">VIP</span>
             <span className="pe-door-text">VIP</span>
             <span className="pe-door-text">ONLY</span>
           </div>

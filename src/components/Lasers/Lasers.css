@@ -3,50 +3,47 @@
   inset: 0;
   pointer-events: none;
   overflow: hidden;
+  z-index: 6;
 }
 
 .laser-line {
   position: absolute;
-  width: 2px;
-  height: 60%;
-  background: linear-gradient(to bottom, var(--lc), transparent);
-  transform-origin: top left;
+  width: 1.5px;
+  height: 65%;
+  background: linear-gradient(to bottom, var(--lc) 0%, rgba(255,255,255,0.3) 30%, transparent 100%);
+  transform-origin: top center;
   transform: rotate(var(--la));
   opacity: 0;
-  box-shadow: 0 0 6px 2px var(--lc);
-  transition: opacity 0.5s ease;
-  will-change: transform;
+  will-change: transform, opacity;
 }
 
-/* Dim */
-.lasers--dim .laser-line {
-  opacity: 0.03;
-}
-
-/* Party */
-.lasers--party .laser-line {
-  opacity: 0.6;
-  animation: laser-sweep var(--ldu) ease-in-out infinite alternate;
+/* ── Ambient: 2 slow sweeping beams ──────────────────────────────────────── */
+.lasers--ambient .laser-line {
+  opacity: 0.35;
+  box-shadow: 0 0 4px 1px var(--lc);
+  animation: laser-slow-sweep var(--ldu) ease-in-out infinite alternate;
   animation-delay: var(--ld);
 }
 
-@keyframes laser-sweep {
-  from { transform: rotate(calc(var(--la) - 20deg)); opacity: 0.3; }
-  to { transform: rotate(calc(var(--la) + 20deg)); opacity: 0.7; }
+@keyframes laser-slow-sweep {
+  from { transform: rotate(calc(var(--la) - 12deg)); opacity: 0.2; }
+  to   { transform: rotate(calc(var(--la) + 12deg)); opacity: 0.45; }
 }
 
-/* Bass Drop */
+/* ── Bass drop: aggressive burst ─────────────────────────────────────────── */
 .lasers--bassdrop .laser-line {
-  opacity: 1 !important;
-  animation: laser-burst 0.1s ease-in-out infinite alternate !important;
+  opacity: 0.9 !important;
+  box-shadow: 0 0 10px 3px var(--lc), 0 0 30px 6px var(--lc) !important;
+  animation: laser-burst var(--ldu) ease-in-out infinite alternate !important;
+  animation-delay: var(--ld) !important;
 }
 
 @keyframes laser-burst {
-  from { transform: rotate(calc(var(--la) - 40deg)) scaleY(1.2); opacity: 0.7; }
-  to { transform: rotate(calc(var(--la) + 40deg)) scaleY(1.5); opacity: 1; }
+  from { transform: rotate(calc(var(--la) - 30deg)) scaleY(1.1); opacity: 0.7; }
+  to   { transform: rotate(calc(var(--la) + 30deg)) scaleY(1.4); opacity: 1; }
 }
 
-/* Reduced motion */
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .laser-line { animation: none !important; opacity: 0.1; }
+  .laser-line { animation: none !important; opacity: 0.15; }
 }

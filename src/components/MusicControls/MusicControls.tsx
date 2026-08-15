@@ -1,188 +1,117 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParty } from '../../contexts/PartyContext';
 import { playlist } from '../../data/playlist';
+import { IconPlay, IconPause, IconSkipBack, IconSkipForward, IconShare, IconCheck, IconList, IconAlert } from '../Icons/Icons';
 import './MusicControls.css';
 
-// ── Volume Knob ────────────────────────────────────────────────────────────────
-// Drag up to increase, drag down to decrease. Range: -135deg → +135deg (270°)
-function VolumeKnob({
-  volume,
-  onChange,
-}: {
-  volume: number;
-  onChange: (v: number) => void;
-}) {
-  const isDragging = useRef(false);
-  const startY = useRef(0);
-  const startVol = useRef(volume);
-
-  // volume 0-100 → angle -135 to +135
-  const angle = -135 + (volume / 100) * 270;
-
-  const onMouseDown = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      isDragging.current = true;
-      startY.current = e.clientY;
-      startVol.current = volume;
-    },
-    [volume],
-  );
-
-  useEffect(() => {
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDragging.current) return;
-      const delta = startY.current - e.clientY; // drag up = positive
-      const newVol = Math.min(100, Math.max(0, startVol.current + delta * 0.8));
-      onChange(Math.round(newVol));
-    };
-    const onMouseUp = () => {
-      isDragging.current = false;
-    };
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-    return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseup', onMouseUp);
-    };
-  }, [onChange]);
-
-  // Touch support
-  const onTouchStart = useCallback(
-    (e: React.TouchEvent) => {
-      isDragging.current = true;
-      startY.current = e.touches[0].clientY;
-      startVol.current = volume;
-    },
-    [volume],
-  );
-
-  useEffect(() => {
-    const onTouchMove = (e: TouchEvent) => {
-      if (!isDragging.current) return;
-      const delta = startY.current - e.touches[0].clientY;
-      const newVol = Math.min(100, Math.max(0, startVol.current + delta * 0.8));
-      onChange(Math.round(newVol));
-    };
-    const onTouchEnd = () => {
-      isDragging.current = false;
-    };
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
-    window.addEventListener('touchend', onTouchEnd);
-    return () => {
-      window.removeEventListener('touchmove', onTouchMove);
-      window.removeEventListener('touchend', onTouchEnd);
-    };
-  }, [onChange]);
-
-  // SVG arc helper
-  const polarToCart = (angleDeg: number, r: number) => {
-    const rad = ((angleDeg - 90) * Math.PI) / 180;
-    return { x: 28 + r * Math.cos(rad), y: 28 + r * Math.sin(rad) };
-  };
-
-  const describeArc = (startAngle: number, endAngle: number, r: number) => {
-    const s = polarToCart(startAngle, r);
-    const e = polarToCart(endAngle, r);
-    const large = endAngle - startAngle > 180 ? 1 : 0;
-    return `M ${s.x} ${s.y} A ${r} ${r} 0 ${large} 1 ${e.x} ${e.y}`;
-  };
-
-  const trackStart = -135 + 90; // 90 offset because polarToCart subtracts 90
-  const trackEnd = 135 + 90;
-  const fillEnd = angle + 90;
-
+// ── Volume slider (inline, inside expanded pill) ──────────────────────────────
+function VolumeSlider({ volume, onChange }: { volume: number; onChange: (v: number) => void }) {
   return (
-    <div
-      className="knob-wrapper"
-      onMouseDown={onMouseDown}
-      onTouchStart={onTouchStart}
-      title={`Volume: ${volume}%`}
-    >
-      <svg className="knob-svg" viewBox="0 0 56 56" width="72" height="72">
-        {/* Outer glow ring */}
-        <circle cx="28" cy="28" r="26" className="knob-outer-ring" />
-
-        {/* Track arc (grey) */}
-        <path
-          d={describeArc(-45, 225, 20)}
-          className="knob-track"
-          fill="none"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-
-        {/* Filled arc (neon pink→cyan gradient) */}
-        <path
-          d={describeArc(-45, -45 + (volume / 100) * 270, 20)}
-          className="knob-fill"
-          fill="none"
-          strokeWidth="3"
-          strokeLinecap="round"
-        />
-
-        {/* Knob body */}
-        <circle cx="28" cy="28" r="16" className="knob-body" />
-
-        {/* Indicator dot */}
-        {(() => {
-          const rad = ((angle - 90) * Math.PI) / 180;
-          const dx = 28 + 10 * Math.cos(rad);
-          const dy = 28 + 10 * Math.sin(rad);
-          return <circle cx={dx} cy={dy} r="2.5" className="knob-dot" />;
-        })()}
+    <div className="vol-row">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <polygon points="11,5 6,9 2,9 2,15 6,15 11,19" fill="currentColor" stroke="none" />
+        <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
       </svg>
-      <span className="knob-label">VOL</span>
-      <span className="knob-value">{volume}%</span>
+      <input
+        type="range"
+        className="vol-slider"
+        min={0} max={100} step={1}
+        value={volume}
+        onChange={e => onChange(parseInt(e.target.value))}
+        aria-label="Volume"
+        style={{ '--vol': `${volume}%` } as React.CSSProperties}
+      />
     </div>
   );
 }
 
-// ── Mini visualizer bars ───────────────────────────────────────────────────────
-function VisualizerBars({ isPlaying, energy }: { isPlaying: boolean; energy: number }) {
+// ── Share button ──────────────────────────────────────────────────────────────
+function ShareBtn() {
+  const [copied, setCopied] = useState(false);
+
+  const handleShare = async () => {
+    const url = window.location.href;
+    const text = "I'm inside Party Wale. Come join.";
+    if (navigator.share) {
+      try { await navigator.share({ title: 'Party Wale', text, url }); } catch {}
+    } else {
+      try {
+        await navigator.clipboard.writeText(`${text}\n${url}`);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch {}
+    }
+  };
+
   return (
-    <div className="mc-visualizer" aria-hidden="true">
-      {Array.from({ length: 12 }).map((_, i) => (
+    <button
+      id="btn-share"
+      className={`pill-btn pill-btn--share ${copied ? 'pill-btn--copied' : ''}`}
+      onClick={handleShare}
+      title={copied ? 'Copied!' : 'Share party'}
+      aria-label="Share party"
+    >
+      {copied ? <IconCheck size={14} /> : <IconShare size={14} />}
+    </button>
+  );
+}
+
+// ── Playlist drawer ───────────────────────────────────────────────────────────
+function PlaylistDrawer({
+  currentSongIndex,
+  isPlaying,
+  onSelect,
+}: {
+  currentSongIndex: number;
+  isPlaying: boolean;
+  onSelect: (index: number) => void;
+}) {
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    listRef.current
+      ?.querySelector('.pl-item--active')
+      ?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }, [currentSongIndex]);
+
+  return (
+    <div className="playlist-drawer" ref={listRef}>
+      {playlist.map((song, i) => (
         <div
-          key={i}
-          className="mc-viz-bar"
-          style={
-            {
-              '--delay': `${i * 0.07}s`,
-              '--height': isPlaying ? `${20 + Math.random() * 60 + energy * 0.4}%` : '15%',
-            } as React.CSSProperties
-          }
-        />
+          key={song.id}
+          className={`pl-item ${i === currentSongIndex ? 'pl-item--active' : ''}`}
+          onClick={() => onSelect(i)}
+        >
+          <span className="pl-num">{i + 1}</span>
+          <div className="pl-info">
+            <span className="pl-title">{song.title}</span>
+            <span className="pl-artist">{song.artist}</span>
+          </div>
+          {i === currentSongIndex && (
+            <span className="pl-active-dot" />
+          )}
+        </div>
       ))}
     </div>
   );
 }
 
-// ── Main MusicControls ─────────────────────────────────────────────────────────
+// ── Main floating pill ────────────────────────────────────────────────────────
 export function MusicControls() {
   const {
-    currentSong,
-    currentSongIndex,
-    isPlaying,
-    isBuffering,
-    isUnavailable,
-    isReady,
-    player,
-    partyEnergy,
-    play,
-    pause,
-    next,
-    previous,
+    currentSong, currentSongIndex, isPlaying, isBuffering,
+    isUnavailable, isReady, player, play, pause, next, previous, jumpToSong,
   } = useParty();
 
+  const [expanded, setExpanded] = useState(false);
+  const [showPlaylist, setShowPlaylist] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(80);
-  const [showPlaylist, setShowPlaylist] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const playlistRef = useRef<HTMLDivElement>(null);
+  const pillRef = useRef<HTMLDivElement>(null);
 
-  // Poll time every 500ms
+  // Poll time
   useEffect(() => {
     intervalRef.current = setInterval(() => {
       if (player && isPlaying) {
@@ -190,41 +119,36 @@ export function MusicControls() {
         setDuration(player.getDuration() || 0);
       }
     }, 500);
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [player, isPlaying]);
 
-  // Sync volume with player
-  const handleVolumeChange = useCallback(
-    (v: number) => {
-      setVolume(v);
-      player?.setVolume(v);
-    },
-    [player],
-  );
+  // Sync volume
+  const handleVolumeChange = useCallback((v: number) => {
+    setVolume(v);
+    player?.setVolume(v);
+  }, [player]);
 
-  // Set initial volume when player becomes ready
   useEffect(() => {
-    if (player && isReady) {
-      player.setVolume(volume);
-    }
+    if (player && isReady) player.setVolume(volume);
   }, [player, isReady]);
 
-  // Auto-scroll active playlist item into view
+  // Close playlist when pill collapses
   useEffect(() => {
-    if (showPlaylist && playlistRef.current) {
-      const active = playlistRef.current.querySelector('.mc-pl-item--active');
-      active?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-    }
-  }, [currentSongIndex, showPlaylist]);
+    if (!expanded) setShowPlaylist(false);
+  }, [expanded]);
 
-  const formatTime = (s: number) => {
-    const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60);
-    return `${m}:${sec.toString().padStart(2, '0')}`;
-  };
+  // Click outside to collapse
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (pillRef.current && !pillRef.current.contains(e.target as Node)) {
+        setExpanded(false);
+      }
+    };
+    if (expanded) document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [expanded]);
 
+  const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -235,136 +159,138 @@ export function MusicControls() {
     }
   };
 
-  const handlePlaylistJump = (index: number) => {
-    if (index === currentSongIndex) return;
-    if (player) {
-      player.loadVideoById(playlist[index].youtubeId, 0);
-    }
-  };
+  const PlayPauseIcon = isBuffering
+    ? () => <span className="pill-spinner" />
+    : isPlaying
+      ? () => <IconPause size={18} />
+      : () => <IconPlay size={18} />;
 
   return (
-    <div className={`music-controls ${isPlaying ? 'mc--playing' : ''}`}>
-      {/* ── Glass card ── */}
-      <div className="mc-glass">
+    <div
+      ref={pillRef}
+      className={`music-pill ${expanded ? 'music-pill--expanded' : ''} ${isPlaying ? 'music-pill--playing' : ''}`}
+    >
+      {/* ── COLLAPSED VIEW ── */}
+      {!expanded && (
+        <div className="pill-collapsed" onClick={() => setExpanded(true)}>
+          <button
+            className="pill-btn pill-btn--sm"
+            onClick={e => { e.stopPropagation(); previous(); }}
+            disabled={!isReady}
+            aria-label="Previous"
+          >
+            <IconSkipBack size={14} />
+          </button>
 
-        {/* ── Top: visualizer + song info ── */}
-        <div className="mc-top">
-          <div className="mc-disc-area">
-            <div className={`mc-disc ${isPlaying ? 'mc-disc--spin' : ''}`}>
-              <div className="mc-disc-inner">🎵</div>
-            </div>
-            <VisualizerBars isPlaying={isPlaying} energy={partyEnergy} />
+          <div className="pill-song-mini">
+            <span className="pill-playing-dot" />
+            <span className="pill-title-mini">{currentSong.title}</span>
           </div>
 
-          <div className="mc-info">
-            <div className="mc-track-num">#{currentSongIndex + 1} / {playlist.length}</div>
-            <div className="mc-title">{currentSong.title}</div>
-            <div className="mc-artist">{currentSong.artist}</div>
+          <button
+            className="pill-btn pill-btn--play-sm"
+            onClick={e => { e.stopPropagation(); isPlaying ? pause() : play(); }}
+            disabled={!isReady || isUnavailable}
+            aria-label={isPlaying ? 'Pause' : 'Play'}
+          >
+            <PlayPauseIcon />
+          </button>
 
+          <button
+            className="pill-btn pill-btn--sm"
+            onClick={e => { e.stopPropagation(); next(); }}
+            disabled={!isReady}
+            aria-label="Next"
+          >
+            <IconSkipForward size={14} />
+          </button>
+
+          <ShareBtn />
+        </div>
+      )}
+
+      {/* ── EXPANDED VIEW ── */}
+      {expanded && (
+        <div className="pill-expanded">
+          {/* Song info */}
+          <div className="pill-meta">
+            <div className="pill-meta-text">
+              <span className="pill-title">{currentSong.title}</span>
+              <span className="pill-artist">{currentSong.artist}</span>
+            </div>
             {isUnavailable && (
-              <div className="mc-status mc-status--warn">⚠ UNAVAILABLE — SKIPPING...</div>
-            )}
-            {isBuffering && !isUnavailable && (
-              <div className="mc-status mc-status--buf">
-                <span className="mc-buf-dot" />
-                <span className="mc-buf-dot" />
-                <span className="mc-buf-dot" />
-                LOADING...
+              <div className="pill-warn">
+                <IconAlert size={11} /> UNAVAILABLE
               </div>
             )}
           </div>
-        </div>
 
-        {/* ── Progress bar ── */}
-        <div className="mc-progress-row">
-          <span className="mc-time">{formatTime(currentTime)}</span>
-          <div className="mc-progress-track">
+          {/* Seek */}
+          <div className="pill-seek-row">
+            <span className="pill-time">{fmt(currentTime)}</span>
             <input
               type="range"
-              className="mc-seek"
-              min={0}
-              max={100}
-              step={0.1}
+              className="pill-seek"
+              min={0} max={100} step={0.1}
               value={progress}
               onChange={handleSeek}
               disabled={!isReady || duration === 0}
               style={{ '--prog': `${progress}%` } as React.CSSProperties}
             />
+            <span className="pill-time">{fmt(duration)}</span>
           </div>
-          <span className="mc-time">{formatTime(duration)}</span>
-        </div>
 
-        {/* ── Controls row ── */}
-        <div className="mc-controls-row">
-          {/* Prev */}
-          <button
-            id="btn-previous"
-            className="mc-btn mc-btn--sm"
-            onClick={previous}
-            disabled={!isReady}
-            title="Previous"
-          >
-            ⏮
-          </button>
+          {/* Controls */}
+          <div className="pill-controls-row">
+            <button className="pill-btn pill-btn--sm" onClick={previous} disabled={!isReady} aria-label="Previous">
+              <IconSkipBack size={15} />
+            </button>
 
-          {/* Play/Pause */}
-          <button
-            id="btn-play-pause"
-            className="mc-btn mc-btn--play"
-            onClick={isPlaying ? pause : play}
-            disabled={!isReady || isUnavailable}
-            title={isPlaying ? 'Pause' : 'Play'}
-          >
-            {isBuffering ? <span className="mc-spinner" /> : isPlaying ? '⏸' : '▶'}
-          </button>
+            <button
+              className="pill-btn pill-btn--play"
+              onClick={isPlaying ? pause : play}
+              disabled={!isReady || isUnavailable}
+              aria-label={isPlaying ? 'Pause' : 'Play'}
+            >
+              <PlayPauseIcon />
+            </button>
 
-          {/* Next */}
-          <button
-            id="btn-next"
-            className="mc-btn mc-btn--sm"
-            onClick={next}
-            disabled={!isReady}
-            title="Next"
-          >
-            ⏭
-          </button>
+            <button className="pill-btn pill-btn--sm" onClick={next} disabled={!isReady} aria-label="Next">
+              <IconSkipForward size={15} />
+            </button>
 
-          {/* Playlist toggle */}
-          <button
-            id="btn-playlist"
-            className={`mc-btn mc-btn--sm ${showPlaylist ? 'mc-btn--active' : ''}`}
-            onClick={() => setShowPlaylist((p) => !p)}
-            title="Playlist"
-          >
-            ☰
-          </button>
+            <VolumeSlider volume={volume} onChange={handleVolumeChange} />
 
-          {/* Volume Knob */}
-          <VolumeKnob volume={volume} onChange={handleVolumeChange} />
-        </div>
+            <button
+              className={`pill-btn pill-btn--sm ${showPlaylist ? 'pill-btn--active' : ''}`}
+              onClick={() => setShowPlaylist(p => !p)}
+              aria-label="Playlist"
+              aria-expanded={showPlaylist}
+            >
+              <IconList size={14} />
+            </button>
 
-        {/* ── Playlist drawer ── */}
-        {showPlaylist && (
-          <div className="mc-playlist" ref={playlistRef}>
-            {playlist.map((song, i) => (
-              <div
-                key={song.id}
-                className={`mc-pl-item ${i === currentSongIndex ? 'mc-pl-item--active' : ''}`}
-                onClick={() => handlePlaylistJump(i)}
-              >
-                <span className="mc-pl-num">{i + 1}</span>
-                <div className="mc-pl-info">
-                  <span className="mc-pl-title">{song.title}</span>
-                  <span className="mc-pl-artist">{song.artist}</span>
-                </div>
-                {i === currentSongIndex && (
-                  <span className="mc-pl-icon">{isPlaying ? '♫' : '▶'}</span>
-                )}
-              </div>
-            ))}
+            <ShareBtn />
+
+            <button
+              className="pill-btn pill-btn--sm pill-btn--close"
+              onClick={() => setExpanded(false)}
+              aria-label="Collapse player"
+            >
+              ✕
+            </button>
           </div>
-        )}
-      </div>
+
+          {/* Playlist */}
+          {showPlaylist && (
+            <PlaylistDrawer
+              currentSongIndex={currentSongIndex}
+              isPlaying={isPlaying}
+              onSelect={jumpToSong}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 }

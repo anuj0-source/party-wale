@@ -21,12 +21,11 @@ interface Particle {
 const COLORS = ['#ff0090', '#00ffff', '#ffcc00', '#aa00ff', '#00ff88', '#ff6600'];
 
 function getParticleCount(isMobile: boolean, isReduced: boolean): number {
-  if (isReduced) return 10;
-  if (isMobile) return 60;
-  // Detect low-end: < 4 logical processors as a rough heuristic
+  if (isReduced) return 8;
+  if (isMobile) return 35;
   const cpuCount = navigator.hardwareConcurrency ?? 4;
-  if (cpuCount <= 2) return 80;
-  return 200;
+  if (cpuCount <= 2) return 45;
+  return 80;  // Atmospheric dust — not a fireworks show
 }
 
 export function Particles({ isPlaying, bassDropActive, isMobile = false }: ParticlesProps) {
@@ -44,17 +43,20 @@ export function Particles({ isPlaying, bassDropActive, isMobile = false }: Parti
 
   const spawnParticle = useCallback((canvas: HTMLCanvasElement): Particle => {
     const color = COLORS[Math.floor(Math.random() * COLORS.length)];
-    const speed = isPlayingRef.current ? (bassDropRef.current ? 4 : 2) : 0.5;
+    // During bass drop → fast; playing → gentle float; idle → almost still
+    const speed = isPlayingRef.current
+      ? (bassDropRef.current ? 3.5 : 0.8)
+      : 0.25;
     return {
       x: Math.random() * canvas.width,
       y: canvas.height + 10,
       vx: (Math.random() - 0.5) * speed,
-      vy: -(Math.random() * speed + 0.5),
-      size: Math.random() * 3 + 1,
+      vy: -(Math.random() * speed + 0.2),
+      size: bassDropRef.current ? Math.random() * 2.5 + 0.8 : Math.random() * 1.2 + 0.3,
       color,
       alpha: 1,
       life: 0,
-      maxLife: 80 + Math.random() * 120,
+      maxLife: bassDropRef.current ? 60 + Math.random() * 80 : 120 + Math.random() * 200,
     };
   }, []);
 
@@ -87,9 +89,9 @@ export function Particles({ isPlaying, bassDropActive, isMobile = false }: Parti
 
       const target = isPlayingRef.current
         ? bassDropRef.current
-          ? maxCount * 1.5
-          : maxCount
-        : Math.floor(maxCount * 0.15);
+          ? Math.floor(maxCount * 2.5)   // explosion
+          : Math.floor(maxCount * 0.6)   // gentle atmosphere
+        : Math.floor(maxCount * 0.08);   // nearly invisible idle
 
       // Spawn new particles to reach target
       while (particlesRef.current.length < target) {
@@ -107,7 +109,7 @@ export function Particles({ isPlaying, bassDropActive, isMobile = false }: Parti
         if (p.alpha <= 0 || p.y < -10) return false;
 
         ctx.save();
-        ctx.globalAlpha = p.alpha * (isPlayingRef.current ? 0.8 : 0.3);
+        ctx.globalAlpha = p.alpha * (bassDropRef.current ? 0.85 : isPlayingRef.current ? 0.35 : 0.12);
         ctx.fillStyle = p.color;
         ctx.shadowBlur = p.size * 4;
         ctx.shadowColor = p.color;

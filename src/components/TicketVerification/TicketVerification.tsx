@@ -48,12 +48,12 @@ export function TicketVerification({ ticketNumber, onEnter }: TicketVerification
 
           {/* Header */}
           <div className="ticket-header">
-            <div className="ticket-logo">🎉</div>
+            <div className="ticket-logo-mark">PW</div>
             <div className="ticket-brand">
               <span className="ticket-brand-main">PARTY WALE</span>
               <span className="ticket-brand-sub">EXCLUSIVE ENTRY PASS</span>
             </div>
-            <div className="ticket-logo">🎉</div>
+            <div className="ticket-logo-mark">VIP</div>
           </div>
 
           {/* Divider */}
@@ -75,7 +75,7 @@ export function TicketVerification({ ticketNumber, onEnter }: TicketVerification
             </div>
             <div className="ticket-info-row">
               <span className="ticket-label">DATE</span>
-              <span className="ticket-value">TONIGHT 🔥</span>
+              <span className="ticket-value">TONIGHT</span>
             </div>
             <div className="ticket-info-row">
               <span className="ticket-label">CLASS</span>
@@ -155,7 +155,7 @@ export function TicketVerification({ ticketNumber, onEnter }: TicketVerification
                 className="ticket-verified-group"
               >
                 <p className="ticket-status-text ticket-status-text--verified">
-                  ✓ TICKET VERIFIED
+                  TICKET VERIFIED
                 </p>
                 <motion.button
                   id="btn-enter-party"
@@ -170,7 +170,7 @@ export function TicketVerification({ ticketNumber, onEnter }: TicketVerification
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.97 }}
                 >
-                  ENTER PARTY 🔥
+                  ENTER THE CLUB
                 </motion.button>
               </motion.div>
             )}

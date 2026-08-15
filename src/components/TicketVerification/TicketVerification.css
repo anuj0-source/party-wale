@@ -95,8 +95,16 @@
   padding: 20px 20px 12px;
 }
 
-.ticket-logo {
-  font-size: 1.8rem;
+.ticket-logo-mark {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.6rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: rgba(255, 0, 144, 0.8);
+  border: 1px solid rgba(255, 0, 144, 0.4);
+  border-radius: 6px;
+  padding: 4px 7px;
+  background: rgba(255, 0, 144, 0.06);
 }
 
 .ticket-brand {

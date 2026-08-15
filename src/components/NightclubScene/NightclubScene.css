@@ -1,254 +1,274 @@
-/* ── NightclubScene layout ──────────────────────────────────────────────── */
+/* ── Scene root ─────────────────────────────────────────────────────────────── */
 .nightclub-scene {
   position: fixed;
   inset: 0;
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
-  transition: filter 0.8s ease;
+  background: #020208;
 }
 
-/* Ghibli painted nightclub background */
+/* ── Layer 1: Background (darker, brightness 0.45) ─────────────────────────── */
 .scene-bg {
   position: absolute;
   inset: 0;
   background: url('/nightclub-bg.png') center center / cover no-repeat;
-  filter: brightness(0.55) saturate(1.3);
-  transform: scale(1.02); /* prevent edge artifacts during animations */
-  transition: filter 1s ease;
+  filter: brightness(0.45) saturate(1.1);
   z-index: 0;
+  transition: filter 0.8s ease;
 }
 
 .scene--party .scene-bg {
-  filter: brightness(0.65) saturate(1.5);
+  filter: brightness(0.5) saturate(1.25);
 }
 
-/* Fog overlay */
-.scene-fog {
+.scene--bassdrop .scene-bg {
+  filter: brightness(0.62) saturate(1.6);
+}
+
+/* ── Vignette overlay ──────────────────────────────────────────────────────── */
+.scene-vignette {
   position: absolute;
   inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 40%,
+    transparent 30%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.crowd-stage {
+  position: absolute;
+  bottom: 12vh;
+  left: 0;
+  right: 0;
+  height: 30%;
   background: linear-gradient(
     to top,
-    rgba(5, 5, 20, 0.85) 0%,
-    rgba(5, 5, 20, 0.3) 40%,
-    transparent 70%
+    rgba(180, 120, 255, 0.06) 0%,
+    transparent 100%
   );
-  z-index: 1;
+  pointer-events: none;
+  z-index: 2;
+  animation: fog-drift 12s ease-in-out infinite alternate;
+}
+
+/* ── Layer 2: Fog ──────────────────────────────────────────────────────────── */
+.scene-fog {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 30%;
+  background: linear-gradient(
+    to top,
+    rgba(180, 120, 255, 0.06) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+  animation: fog-drift 12s ease-in-out infinite alternate;
+}
+
+@keyframes fog-drift {
+  from { opacity: 0.6; transform: scaleX(1); }
+  to   { opacity: 1;   transform: scaleX(1.05); }
+}
+
+/* ── Layer 3: Lighting (handled by Lighting component) ─────────────────────── */
+/* ── Layer 4: Lasers (handled by Lasers component) ─────────────────────────── */
+/* ── Layer 5: Particles (handled by Particles component) ───────────────────── */
+
+/* ── Layer 6: DJ ───────────────────────────────────────────────────────────── */
+.scene-dj-layer {
+  display: none; /* Hide since the bg has the DJ already, DJ component handles just the lights overlay */
+}
+
+/* ── Layer 7: Crowd ────────────────────────────────────────────────────────── */
+.scene-crowd-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
   pointer-events: none;
 }
 
-/* ── Content layout (above all decorative layers) ── */
-.scene-content {
-  position: relative;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-  padding: clamp(8px, 2vw, 16px);
-  gap: 8px;
-  box-sizing: border-box;
-  pointer-events: none; /* children opt-in */
-}
-
-.scene-content > * {
-  pointer-events: auto;
-}
-
-/* ── Top bar ── */
-.scene-topbar {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-  flex-shrink: 0;
-}
-
-.scene-brand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.scene-brand-emoji {
-  font-size: 1.5rem;
-}
-
-.scene-brand-name {
-  font-family: 'Orbitron', monospace;
-  font-size: clamp(1rem, 3vw, 1.6rem);
-  font-weight: 900;
-  color: #fff;
-  text-shadow:
-    0 0 15px rgba(255, 0, 144, 0.9),
-    0 0 40px rgba(255, 0, 144, 0.5);
-  letter-spacing: 4px;
-}
-
-.scene-topbar-right {
-  width: 200px;
-  flex-shrink: 0;
-}
-
-/* ── Stage (middle area) ── */
-.scene-stage {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  position: relative;
-  min-height: 0;
-  gap: 8px;
-}
-
-.scene-dj-area {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-}
-
-/* ── Bass Drop Text ── */
-.scene-bassdrop-text {
-  font-family: 'Orbitron', monospace;
-  font-size: clamp(1.4rem, 4vw, 2.5rem);
-  font-weight: 900;
-  color: #ffcc00;
-  text-shadow:
-    0 0 20px rgba(255, 204, 0, 1),
-    0 0 60px rgba(255, 0, 144, 0.8),
-    0 0 100px rgba(255, 0, 144, 0.4);
-  letter-spacing: 4px;
-  text-align: center;
+/* ── Bass drop flash ───────────────────────────────────────────────────────── */
+.scene-bassdrop-flash {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 0, 144, 0.12);
   pointer-events: none;
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  white-space: nowrap;
+  z-index: 30;
 }
 
-/* ── Loading state ── */
-.scene-loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  position: absolute;
+/* ── Premium Bass Drop Banner ──────────────────────────────────────────────── */
+.scene-bassdrop-wrapper {
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 35;
   pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.scene-bassdrop-banner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 40px;
+  background: rgba(10, 0, 20, 0.4);
+  border: 1px solid rgba(255, 0, 144, 0.3);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 
+    0 0 30px rgba(255, 0, 144, 0.2),
+    inset 0 0 20px rgba(255, 0, 144, 0.1);
+}
+
+.scene-bassdrop-title {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(2rem, 6vw, 4rem);
+  font-weight: 900;
+  letter-spacing: 12px;
+  margin-right: -12px;
+  color: #fff;
+  text-transform: uppercase;
+  background: linear-gradient(to bottom, #ffffff, #ffb3e6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 15px rgba(255, 0, 144, 0.8));
+}
+
+.scene-bassdrop-subtitle {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
+  font-weight: 600;
+  letter-spacing: 8px;
+  margin-right: -8px;
+  color: #00ffff;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+  text-transform: uppercase;
+}
+
+/* ── Loading ───────────────────────────────────────────────────────────────── */
+.scene-loading {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  z-index: 40;
+  background: rgba(2, 2, 8, 0.7);
+  backdrop-filter: blur(4px);
 }
 
 .scene-loading span {
   font-family: 'Orbitron', monospace;
-  font-size: 0.65rem;
-  color: rgba(0, 255, 255, 0.7);
+  font-size: 0.6rem;
   letter-spacing: 3px;
-  animation: loading-pulse 1.2s ease-in-out infinite alternate;
-}
-
-@keyframes loading-pulse {
-  from { opacity: 0.4; }
-  to { opacity: 1; }
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .scene-loading-spinner {
-  width: 36px;
-  height: 36px;
-  border: 3px solid rgba(0, 255, 255, 0.15);
-  border-top-color: #00ffff;
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(255, 0, 144, 0.15);
+  border-top-color: rgba(255, 0, 144, 0.7);
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  animation: spin 0.9s linear infinite;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
+@keyframes spin { to { transform: rotate(360deg); } }
 
-/* ── Crowd row ── */
-.scene-crowd-row {
-  flex-shrink: 0;
-  padding: 0 8px;
-}
-
-/* ── Bottom panel ── */
-.scene-bottom {
-  display: grid;
-  grid-template-columns: 1fr 200px;
-  gap: 12px;
-  flex-shrink: 0;
-  align-items: start;
-}
-
-.scene-controls-panel {
-  min-width: 0;
-}
-
-.scene-side-panel {
+/* ── Layer 8: Top bar (z-index highest UI layer) ───────────────────────────── */
+.scene-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* ── Mobile ── */
-@media (max-width: 639px) {
-  .scene-bottom {
-    grid-template-columns: 1fr;
-  }
-
-  .scene-controls-panel {
-    grid-column: 1 / -1;
-  }
-
-  .scene-brand-name {
-    font-size: 1.1rem;
-    letter-spacing: 2px;
-  }
-
-  .scene-bassdrop-text {
-    font-size: 1.2rem;
-  }
-}
-
-.scene-mobile-footer {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex-shrink: 0;
-}
-
-/* ── Bass drop camera shake ── */
-.scene-shake-overlay {
-  position: absolute;
-  inset: 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  /* Very subtle gradient so text is readable */
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0%, transparent 100%);
   pointer-events: none;
-  animation: camera-shake 0.15s ease-in-out infinite;
-  z-index: 0;
+}
+
+/* ── Brand mark ────────────────────────────────────────────────────────────── */
+.scene-brand {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  pointer-events: none;
+}
+
+.scene-brand-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff0090;
+  box-shadow: 0 0 8px rgba(255, 0, 144, 0.9);
+  flex-shrink: 0;
+}
+
+.scene-brand-name {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(0.6rem, 1.5vw, 0.75rem);
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: rgba(255, 255, 255, 0.75);
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+}
+
+/* ── Ticket chip ───────────────────────────────────────────────────────────── */
+.scene-ticket-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: rgba(255, 255, 255, 0.55);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  pointer-events: all;
+  backdrop-filter: blur(8px);
+}
+
+.scene-ticket-chip:hover {
+  color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 0, 144, 0.35);
+  background: rgba(255, 0, 144, 0.08);
+  box-shadow: 0 0 12px rgba(255, 0, 144, 0.15);
+}
+
+/* ── Bass drop camera shake ────────────────────────────────────────────────── */
+.scene--bassdrop {
+  animation: camera-shake 0.15s ease-in-out infinite alternate;
 }
 
 @keyframes camera-shake {
-  0%   { transform: translate(0, 0) rotate(0deg); }
-  20%  { transform: translate(-2px, 1px) rotate(-0.3deg); }
-  40%  { transform: translate(2px, -1px) rotate(0.3deg); }
-  60%  { transform: translate(-1px, 2px) rotate(-0.2deg); }
-  80%  { transform: translate(1px, -2px) rotate(0.2deg); }
-  100% { transform: translate(0, 0) rotate(0deg); }
+  from { transform: translate(0, 0); }
+  to   { transform: translate(-2px, 1px); }
 }
 
-/* ── Reduced Motion ── */
+/* ── Reduced motion ────────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .scene-shake-overlay,
-  .scene-bg {
-    animation: none !important;
-    transition: none !important;
-  }
-}
-
-/* ── Large desktop adjustment ── */
-@media (min-width: 1400px) {
-  .scene-bottom {
-    grid-template-columns: 340px 1fr 220px;
-  }
+  .scene--bassdrop { animation: none !important; }
+  .scene-fog { animation: none !important; }
+  .scene-bg { transition: none !important; }
 }

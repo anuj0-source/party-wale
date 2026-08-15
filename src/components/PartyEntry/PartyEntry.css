@@ -53,11 +53,18 @@
 /* ── DJ silhouette ─────────────────────────────────────────────────────── */
 .pe-dj-silhouette {
   position: absolute;
-  bottom: 30%;
-  font-size: 4rem;
-  filter: drop-shadow(0 0 20px rgba(255, 0, 144, 0.8));
+  bottom: 28%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  filter: drop-shadow(0 0 24px rgba(255, 0, 144, 0.7));
   animation: dj-bob 0.5s ease-in-out infinite alternate;
   z-index: 2;
+}
+
+.pe-dj-svg {
+  width: clamp(80px, 12vw, 140px);
+  height: auto;
 }
 
 @keyframes dj-bob {
@@ -75,9 +82,10 @@
 }
 
 .pe-crowd-person {
-  font-size: 1.8rem;
+  width: clamp(18px, 3vw, 32px);
+  height: clamp(36px, 6vw, 64px);
   animation: crowd-dance calc(0.4s + var(--pi) * 0.05s) ease-in-out infinite alternate;
-  filter: drop-shadow(0 0 6px rgba(255, 0, 144, 0.6));
+  filter: drop-shadow(0 0 5px rgba(255, 0, 144, 0.5));
 }
 
 @keyframes crowd-dance {
@@ -198,7 +206,18 @@
   z-index: 2;
 }
 
-.pe-door-logo span:first-child { font-size: 2.5rem; }
+.pe-door-monogram {
+  font-family: 'Orbitron', monospace;
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: rgba(255, 0, 144, 0.85);
+  border: 1px solid rgba(255, 0, 144, 0.4);
+  border-radius: 8px;
+  padding: 4px 10px;
+  background: rgba(255, 0, 144, 0.07);
+  margin-bottom: 6px;
+}
 
 .pe-door-text {
   font-family: 'Orbitron', monospace;

@@ -1,0 +1,217 @@
+/* ── Backdrop ─────────────────────────────────────────────────────────────── */
+.tm-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+}
+
+/* ── Modal ────────────────────────────────────────────────────────────────── */
+.tm-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 201;
+  padding: 20px;
+  pointer-events: none;
+}
+
+/* ── Ticket card ──────────────────────────────────────────────────────────── */
+.tm-ticket {
+  position: relative;
+  background: rgba(8, 4, 26, 0.95);
+  border: 1px solid rgba(255, 0, 144, 0.3);
+  border-radius: 20px;
+  padding: 24px 24px 20px;
+  width: 100%;
+  max-width: 340px;
+  pointer-events: all;
+  overflow: hidden;
+}
+
+.tm-glow-border {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(255, 0, 144, 0.06), transparent 60%);
+  pointer-events: none;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+.tm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.tm-logo-mark {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.55rem;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  color: rgba(255, 0, 144, 0.85);
+  border: 1px solid rgba(255, 0, 144, 0.35);
+  border-radius: 6px;
+  padding: 3px 7px;
+  background: rgba(255, 0, 144, 0.06);
+  flex-shrink: 0;
+}
+
+.tm-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.tm-brand-main {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(255, 0, 144, 0.5);
+}
+
+.tm-brand-sub {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.42rem;
+  letter-spacing: 2.5px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ── Divider ──────────────────────────────────────────────────────────────── */
+.tm-divider {
+  display: flex;
+  align-items: center;
+  margin: 10px -24px;
+  position: relative;
+}
+
+.tm-notch {
+  width: 18px;
+  height: 18px;
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 0, 144, 0.2);
+}
+
+.tm-notch--left  { margin-left: -8px; }
+.tm-notch--right { margin-right: -8px; }
+
+.tm-dashes {
+  flex: 1;
+  height: 1px;
+  background: repeating-linear-gradient(
+    to right,
+    rgba(255, 0, 144, 0.3) 0px,
+    rgba(255, 0, 144, 0.3) 5px,
+    transparent 5px,
+    transparent 10px
+  );
+}
+
+/* ── Info rows ────────────────────────────────────────────────────────────── */
+.tm-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 0;
+}
+
+.tm-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.tm-label {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.48rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.28);
+  letter-spacing: 2px;
+  flex-shrink: 0;
+}
+
+.tm-value {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 1px;
+  text-align: right;
+}
+
+.tm-value--vip {
+  color: #ff0090;
+  text-shadow: 0 0 8px rgba(255, 0, 144, 0.5);
+}
+
+.tm-value--song {
+  color: rgba(0, 255, 255, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+
+/* ── Barcode ──────────────────────────────────────────────────────────────── */
+.tm-barcode-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 0 4px;
+}
+
+.tm-barcode {
+  display: flex;
+  gap: 1.5px;
+  align-items: stretch;
+  height: 40px;
+}
+
+.tm-bar {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 1px;
+  flex-shrink: 0;
+  height: 100%;
+}
+
+.tm-barcode-num {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.45rem;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Close ────────────────────────────────────────────────────────────────── */
+.tm-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-family: 'Orbitron', monospace;
+  font-size: 0.45rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  padding: 2px 6px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tm-close:hover {
+  color: rgba(255, 0, 144, 0.7);
+  border-color: rgba(255, 0, 144, 0.3);
+}

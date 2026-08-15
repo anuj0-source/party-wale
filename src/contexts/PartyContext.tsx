@@ -45,6 +45,7 @@ export interface PartyContextValue {
   pause: () => void;
   next: () => void;
   previous: () => void;
+  jumpToSong: (index: number) => void;
 
   // Called by YouTubePlayer component
   handlePlayerReady: (player: YT.Player) => void;
@@ -205,6 +206,12 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
     setCurrentSongIndex((prev) => (prev - 1 + playlist.length) % playlist.length);
     setIsUnavailable(false);
   }, [stopBeatController]);
+  const jumpToSong = useCallback((index: number) => {
+    if (index === currentSongIndex) return;
+    stopBeatController();
+    setCurrentSongIndex(index);
+    setIsUnavailable(false);
+  }, [currentSongIndex, stopBeatController]);
 
   // ── Cleanup ───────────────────────────────────────────────────────────────
 
@@ -235,6 +242,7 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
         pause,
         next,
         previous,
+        jumpToSong,
         handlePlayerReady,
         handleStateChange,
         handleError,

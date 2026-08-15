@@ -6,63 +6,48 @@ interface DJProps {
   bassDropActive: boolean;
 }
 
+/**
+ * DJ component — rendered as an atmospheric spotlight + booth glow layer.
+ * The actual illustrated DJ is part of the background image.
+ * This component adds:
+ *   - A radial spotlight halo centered on the background's DJ position
+ *   - A subtle booth glow that pulses with the music
+ *   - A bass drop flash burst
+ *
+ * This makes the background DJ feel "live" and integrated without
+ * placing a competing CSS stick figure over him.
+ */
 export function DJ({ isPlaying, bassDropActive }: DJProps) {
   return (
     <div
-      className={`dj-wrapper ${isPlaying ? 'dj--dancing' : 'dj--idle'} ${bassDropActive ? 'dj--bassdrop' : ''}`}
+      className={`dj-overlay ${isPlaying ? 'dj--playing' : 'dj--idle'} ${bassDropActive ? 'dj--bassdrop' : ''}`}
       aria-label="DJ booth"
     >
-      {/* Booth */}
-      <div className="dj-booth">
-        <div className="dj-booth-screen">
-          {isPlaying ? (
-            <div className="dj-booth-waveform">
-              {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} className="dj-waveform-bar" style={{ '--bi': i } as React.CSSProperties} />
-              ))}
-            </div>
-          ) : (
-            <span className="dj-booth-idle-text">❚❚</span>
-          )}
-        </div>
-        <div className="dj-booth-controls">
-          <div className="dj-knob" />
-          <div className="dj-knob dj-knob--big" />
-          <div className="dj-knob" />
-        </div>
-        <div className="dj-booth-platter">
-          <div className="dj-platter" />
-          <div className="dj-platter" />
-        </div>
-      </div>
+      {/* Booth backlight glow — behind the DJ */}
+      <div className="dj-booth-glow" />
 
-      {/* DJ Character */}
-      <div className="dj-character">
-        {/* Head */}
-        <div className="dj-head">
-          <div className="dj-headphones">
-            <div className="dj-headphone dj-headphone--left" />
-            <div className="dj-headphone dj-headphone--right" />
-            <div className="dj-headband" />
-          </div>
-          <div className="dj-face">
-            <div className="dj-eyes">
-              <div className="dj-eye" />
-              <div className="dj-eye" />
-            </div>
-          </div>
-        </div>
-        {/* Body */}
-        <div className="dj-body">
-          <div className="dj-arm dj-arm--left" />
-          <div className="dj-torso" />
-          <div className="dj-arm dj-arm--right" />
-        </div>
-      </div>
+      {/* Spotlight halo from above */}
+      <div className="dj-spotlight" />
 
-      {/* Bass drop flash */}
+      {/* Inner warm lamp glow (matches the warm ceiling lamps in bg) */}
+      <div className="dj-lamp-glow" />
+
+      {/* Waveform visualizer on the "screen" area */}
+      {isPlaying && (
+        <div className="dj-waveform" aria-hidden="true">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div
+              key={i}
+              className="dj-waveform-bar"
+              style={{ '--bi': i } as React.CSSProperties}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Bass drop burst */}
       {bassDropActive && (
-        <div className="dj-bassdrop-flash" aria-hidden="true" />
+        <div className="dj-bassdrop-burst" aria-hidden="true" />
       )}
     </div>
   );

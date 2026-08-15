@@ -6,8 +6,8 @@ export function PartyStats() {
   const { ticketNumber, isPlaying, partyEnergy, currentSong } = useParty();
 
   const vibe = Math.round(partyEnergy);
-  const vibeLabel = vibe >= 80 ? '🔥' : vibe >= 50 ? '⚡' : '🎵';
-  const statusLabel = isPlaying ? '🟢 INSIDE' : '🟡 PAUSED';
+  const vibeLabel = vibe >= 80 ? 'MAX' : vibe >= 50 ? 'HIGH' : 'LOW';
+  const statusLabel = isPlaying ? 'LIVE' : 'PAUSED';
 
   return (
     <div className="party-stats">
