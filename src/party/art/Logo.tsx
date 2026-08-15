@@ -43,7 +43,7 @@ export function Logo({ size = 56, withSubtitle = false, tilt = -2 }: LogoProps) 
   return (
     <div style={style} className="pw-logo">
       <svg
-        viewBox="0 0 300 60"
+        viewBox="0 0 230 60"
         height={size}
         width="auto"
         aria-label="PARTY WALE"
@@ -56,24 +56,24 @@ export function Logo({ size = 56, withSubtitle = false, tilt = -2 }: LogoProps) 
             <stop offset="100%" stopColor="#19d3da" />
           </linearGradient>
         </defs>
-        <g fontFamily="Fraunces, serif" fontWeight="900" fontSize="32" letterSpacing="1.2">
+        <g fontFamily="Fraunces, 'Times New Roman', serif" fontWeight="900" fontSize="32" letterSpacing="3">
           <text x="2" y="36" fill="url(#pwGrad)" stroke="#14101c" strokeWidth="0.6">
             PARTY
           </text>
-          <text x="148" y="36" fill="#f6ecd9" stroke="#14101c" strokeWidth="0.6">
-            WALE
+          <text x="150" y="36" fill="#f6ecd9" stroke="#14101c" strokeWidth="0.6" fontFamily="sans-serif">
+            वाले
           </text>
         </g>
         {/* hand-drawn underline */}
         <path
-          d="M5 46 Q 80 52 150 44 T 290 47"
+          d="M5 46 Q 80 52 150 44 T 225 47"
           fill="none"
           stroke="#f6b73c"
           strokeWidth="2.4"
           strokeLinecap="round"
         />
         {/* disco-ball dot */}
-        <g transform="translate(158, 8)">
+        <g transform="translate(182, 8)">
           <circle r="4" fill="#19d3da" stroke="#14101c" strokeWidth="0.8" />
           <circle r="1" fill="#f6ecd9" cx="-1" cy="-1" />
         </g>

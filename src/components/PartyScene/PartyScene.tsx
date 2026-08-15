@@ -111,10 +111,10 @@ export function PartyScene() {
 
       {/* ── Top-right chip + socials ────────────────────────────── */}
       <div className="scene-topright">
-        <TicketChip onClick={() => setTicketOpen(true)} />
         <div className="scene-socials">
           <SocialLinks />
         </div>
+        <TicketChip onClick={() => setTicketOpen(true)} />
       </div>
 
       {/* ── Music pill ──────────────────────────────────────────── */}
