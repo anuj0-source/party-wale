@@ -1,23 +1,37 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useParty } from '../../contexts/PartyContext';
 import { playlist } from '../../data/playlist';
-import { IconPlay, IconPause, IconSkipBack, IconSkipForward, IconShare, IconCheck, IconList, IconAlert } from '../Icons/Icons';
+import {
+  IconPlay, IconPause, IconSkipBack, IconSkipForward,
+  IconShare, IconCheck, IconList, IconAlert,
+} from '../Icons/Icons';
 import './MusicControls.css';
 
-// ── Volume slider (inline, inside expanded pill) ──────────────────────────────
+// ── Live EQ bars (collapsed pill) ────────────────────────────────────────────
+function EQBars() {
+  return (
+    <div className="pill-eq" aria-hidden="true">
+      {[0, 1, 2, 3].map((i) => (
+        <div key={i} className="pill-eq-bar" />
+      ))}
+    </div>
+  );
+}
+
+// ── Volume slider ─────────────────────────────────────────────────────────────
 function VolumeSlider({ volume, onChange }: { volume: number; onChange: (v: number) => void }) {
   return (
     <div className="vol-row">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-        <polygon points="11,5 6,9 2,9 2,15 6,15 11,19" fill="currentColor" stroke="none" />
-        <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+        <polygon points="11,5 6,9 2,9 2,15 6,15 11,19" />
       </svg>
       <input
         type="range"
         className="vol-slider"
         min={0} max={100} step={1}
         value={volume}
-        onChange={e => onChange(parseInt(e.target.value))}
+        onChange={(e) => onChange(parseInt(e.target.value))}
         aria-label="Volume"
         style={{ '--vol': `${volume}%` } as React.CSSProperties}
       />
@@ -26,7 +40,7 @@ function VolumeSlider({ volume, onChange }: { volume: number; onChange: (v: numb
 }
 
 // ── Share button ──────────────────────────────────────────────────────────────
-function ShareBtn() {
+function ShareBtn({ size = 14 }: { size?: number }) {
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
@@ -46,12 +60,12 @@ function ShareBtn() {
   return (
     <button
       id="btn-share"
-      className={`pill-btn pill-btn--share ${copied ? 'pill-btn--copied' : ''}`}
+      className={`pill-btn pill-btn--sm pill-btn--share ${copied ? 'pill-btn--copied' : ''}`}
       onClick={handleShare}
       title={copied ? 'Copied!' : 'Share party'}
       aria-label="Share party"
     >
-      {copied ? <IconCheck size={14} /> : <IconShare size={14} />}
+      {copied ? <IconCheck size={size} /> : <IconShare size={size} />}
     </button>
   );
 }
@@ -87,7 +101,7 @@ function PlaylistDrawer({
             <span className="pl-title">{song.title}</span>
             <span className="pl-artist">{song.artist}</span>
           </div>
-          {i === currentSongIndex && (
+          {i === currentSongIndex && isPlaying && (
             <span className="pl-active-dot" />
           )}
         </div>
@@ -130,6 +144,7 @@ export function MusicControls() {
 
   useEffect(() => {
     if (player && isReady) player.setVolume(volume);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [player, isReady]);
 
   // Close playlist when pill collapses
@@ -162,135 +177,205 @@ export function MusicControls() {
   const PlayPauseIcon = isBuffering
     ? () => <span className="pill-spinner" />
     : isPlaying
-      ? () => <IconPause size={18} />
-      : () => <IconPlay size={18} />;
+      ? () => <IconPause size={20} />
+      : () => <IconPlay size={20} />;
+
+  const PlayPauseIconSm = isBuffering
+    ? () => <span className="pill-spinner" />
+    : isPlaying
+      ? () => <IconPause size={15} />
+      : () => <IconPlay size={15} />;
 
   return (
     <div
       ref={pillRef}
-      className={`music-pill ${expanded ? 'music-pill--expanded' : ''} ${isPlaying ? 'music-pill--playing' : ''}`}
+      className={`music-pill-wrapper ${isPlaying ? 'music-pill--playing' : ''}`}
     >
-      {/* ── COLLAPSED VIEW ── */}
-      {!expanded && (
-        <div className="pill-collapsed" onClick={() => setExpanded(true)}>
-          <button
-            className="pill-btn pill-btn--sm"
-            onClick={e => { e.stopPropagation(); previous(); }}
-            disabled={!isReady}
-            aria-label="Previous"
-          >
-            <IconSkipBack size={14} />
-          </button>
+      <motion.div
+        layout
+        transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+        className={`music-pill-container ${expanded ? 'pill-expanded' : 'pill-collapsed'}`}
+        onClick={() => !expanded && setExpanded(true)}
+        style={{ borderRadius: expanded ? 28 : 100 }}
+      >
+        <AnimatePresence mode="popLayout">
+          {/* ── COLLAPSED VIEW ── */}
+          {!expanded ? (
+            <motion.div
+              key="collapsed"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              className="pill-content-collapsed"
+            >
+              {/* EQ bars */}
+              <EQBars />
 
-          <div className="pill-song-mini">
-            <span className="pill-playing-dot" />
-            <span className="pill-title-mini">{currentSong.title}</span>
-          </div>
-
-          <button
-            className="pill-btn pill-btn--play-sm"
-            onClick={e => { e.stopPropagation(); isPlaying ? pause() : play(); }}
-            disabled={!isReady || isUnavailable}
-            aria-label={isPlaying ? 'Pause' : 'Play'}
-          >
-            <PlayPauseIcon />
-          </button>
-
-          <button
-            className="pill-btn pill-btn--sm"
-            onClick={e => { e.stopPropagation(); next(); }}
-            disabled={!isReady}
-            aria-label="Next"
-          >
-            <IconSkipForward size={14} />
-          </button>
-
-          <ShareBtn />
-        </div>
-      )}
-
-      {/* ── EXPANDED VIEW ── */}
-      {expanded && (
-        <div className="pill-expanded">
-          {/* Song info */}
-          <div className="pill-meta">
-            <div className="pill-meta-text">
-              <span className="pill-title">{currentSong.title}</span>
-              <span className="pill-artist">{currentSong.artist}</span>
+            {/* Song title */}
+            <div className="pill-song-mini">
+              <span className="pill-title-mini">{currentSong.title}</span>
             </div>
-            {isUnavailable && (
-              <div className="pill-warn">
-                <IconAlert size={11} /> UNAVAILABLE
-              </div>
-            )}
-          </div>
 
-          {/* Seek */}
-          <div className="pill-seek-row">
-            <span className="pill-time">{fmt(currentTime)}</span>
-            <input
-              type="range"
-              className="pill-seek"
-              min={0} max={100} step={0.1}
-              value={progress}
-              onChange={handleSeek}
-              disabled={!isReady || duration === 0}
-              style={{ '--prog': `${progress}%` } as React.CSSProperties}
-            />
-            <span className="pill-time">{fmt(duration)}</span>
-          </div>
-
-          {/* Controls */}
-          <div className="pill-controls-row">
-            <button className="pill-btn pill-btn--sm" onClick={previous} disabled={!isReady} aria-label="Previous">
-              <IconSkipBack size={15} />
+            {/* Prev */}
+            <button
+              className="pill-btn--sm-bare"
+              onClick={(e) => { e.stopPropagation(); previous(); }}
+              disabled={!isReady}
+              aria-label="Previous"
+            >
+              <IconSkipBack size={13} />
             </button>
 
+            {/* Play/Pause capsule */}
             <button
-              className="pill-btn pill-btn--play"
-              onClick={isPlaying ? pause : play}
+              className="pill-play-capsule"
+              onClick={(e) => { e.stopPropagation(); isPlaying ? pause() : play(); }}
               disabled={!isReady || isUnavailable}
               aria-label={isPlaying ? 'Pause' : 'Play'}
             >
-              <PlayPauseIcon />
+              <PlayPauseIconSm />
             </button>
 
-            <button className="pill-btn pill-btn--sm" onClick={next} disabled={!isReady} aria-label="Next">
-              <IconSkipForward size={15} />
-            </button>
-
-            <VolumeSlider volume={volume} onChange={handleVolumeChange} />
-
+            {/* Next */}
             <button
-              className={`pill-btn pill-btn--sm ${showPlaylist ? 'pill-btn--active' : ''}`}
-              onClick={() => setShowPlaylist(p => !p)}
-              aria-label="Playlist"
-              aria-expanded={showPlaylist}
+              className="pill-btn--sm-bare"
+              onClick={(e) => { e.stopPropagation(); next(); }}
+              disabled={!isReady}
+              aria-label="Next"
+              style={{ marginRight: 4 }}
             >
-              <IconList size={14} />
+              <IconSkipForward size={13} />
             </button>
 
-            <ShareBtn />
-
-            <button
-              className="pill-btn pill-btn--sm pill-btn--close"
-              onClick={() => setExpanded(false)}
-              aria-label="Collapse player"
+              <ShareBtn size={13} />
+            </motion.div>
+          ) : (
+            /* ── EXPANDED VIEW ── */
+            <motion.div
+              key="expanded"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, delay: 0.05 }}
+              className="pill-content-expanded"
             >
-              ✕
-            </button>
-          </div>
+              {/* Artwork + meta header */}
+              <div className="pill-artwork">
+              <div className="pill-disc" aria-hidden="true" />
+              <div className="pill-artwork-text">
+                <div className="pill-artwork-title">{currentSong.title}</div>
+                <div className="pill-artwork-artist">{currentSong.artist}</div>
+                {isUnavailable && (
+                  <div className="pill-warn">
+                    <IconAlert size={10} /> UNAVAILABLE
+                  </div>
+                )}
+              </div>
+            </div>
 
-          {/* Playlist */}
-          {showPlaylist && (
-            <PlaylistDrawer
-              currentSongIndex={currentSongIndex}
-              isPlaying={isPlaying}
-              onSelect={jumpToSong}
-            />
-          )}
-        </div>
-      )}
+            {/* Card body */}
+            <div className="pill-body">
+              {/* Seek */}
+              <div className="pill-seek-row">
+                <span className="pill-time">{fmt(currentTime)}</span>
+                <input
+                  type="range"
+                  className="pill-seek"
+                  min={0} max={100} step={0.1}
+                  value={progress}
+                  onChange={handleSeek}
+                  disabled={!isReady || duration === 0}
+                  style={{ '--prog': `${progress}%` } as React.CSSProperties}
+                  aria-label="Seek"
+                />
+                <span className="pill-time">{fmt(duration)}</span>
+              </div>
+
+              {/* Controls */}
+              <div className="pill-controls-row">
+                {/* Left: aux */}
+                <div className="pill-controls-left">
+                  <ShareBtn />
+                </div>
+
+                {/* Centre: prev · play · next */}
+                <div className="pill-controls-center">
+                  <button
+                    className="pill-btn pill-btn--skip"
+                    onClick={previous}
+                    disabled={!isReady}
+                    aria-label="Previous"
+                  >
+                    <IconSkipBack size={15} />
+                  </button>
+
+                  <button
+                    className="pill-btn pill-btn--play"
+                    onClick={isPlaying ? pause : play}
+                    disabled={!isReady || isUnavailable}
+                    aria-label={isPlaying ? 'Pause' : 'Play'}
+                  >
+                    <PlayPauseIcon />
+                  </button>
+
+                  <button
+                    className="pill-btn pill-btn--skip"
+                    onClick={next}
+                    disabled={!isReady}
+                    aria-label="Next"
+                  >
+                    <IconSkipForward size={15} />
+                  </button>
+                </div>
+
+                {/* Right: playlist toggle + close */}
+                <div className="pill-controls-right">
+                  <button
+                    className={`pill-btn pill-btn--sm ${showPlaylist ? 'pill-btn--active' : ''}`}
+                    onClick={() => setShowPlaylist((p) => !p)}
+                    aria-label="Playlist"
+                    aria-expanded={showPlaylist}
+                  >
+                    <IconList size={14} />
+                  </button>
+                  <button
+                    className="pill-btn pill-btn--sm pill-btn--close"
+                    onClick={() => setExpanded(false)}
+                    aria-label="Collapse player"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              {/* Volume */}
+              <div className="pill-aux-row">
+                <VolumeSlider volume={volume} onChange={handleVolumeChange} />
+              </div>
+
+              {/* Playlist */}
+              <AnimatePresence>
+                {showPlaylist && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    style={{ overflow: 'hidden' }}
+                  >
+                    <PlaylistDrawer
+                      currentSongIndex={currentSongIndex}
+                      isPlaying={isPlaying}
+                      onSelect={jumpToSong}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      </motion.div>
     </div>
   );
 }
