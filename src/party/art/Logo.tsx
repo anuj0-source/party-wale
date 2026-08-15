@@ -72,11 +72,6 @@ export function Logo({ size = 56, withSubtitle = false, tilt = -2 }: LogoProps) 
           strokeWidth="2.4"
           strokeLinecap="round"
         />
-        {/* disco-ball dot */}
-        <g transform="translate(182, 8)">
-          <circle r="4" fill="#19d3da" stroke="#14101c" strokeWidth="0.8" />
-          <circle r="1" fill="#f6ecd9" cx="-1" cy="-1" />
-        </g>
       </svg>
       {withSubtitle && (
         <span

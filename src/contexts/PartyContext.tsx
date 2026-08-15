@@ -184,8 +184,15 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
 
   // ── Controls ──────────────────────────────────────────────────────────────
 
-  const play = useCallback(() => playerRef.current?.playVideo(), []);
-  const pause = useCallback(() => playerRef.current?.pauseVideo(), []);
+  const play = useCallback(() => {
+    playerRef.current?.playVideo();
+    setIsPlaying(true);
+  }, []);
+  
+  const pause = useCallback(() => {
+    playerRef.current?.pauseVideo();
+    setIsPlaying(false);
+  }, []);
 
   const toggleShuffle = useCallback(() => {
     setIsShuffled((prev) => {

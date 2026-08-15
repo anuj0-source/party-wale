@@ -247,7 +247,10 @@ export function MusicPill() {
                 </button>
                 <button
                   className="music-pill-big-play"
-                  onClick={isPlaying ? pause : play}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (isPlaying) pause(); else play();
+                  }}
                   disabled={!isReady || isUnavailable}
                   aria-label={isPlaying ? copy.pause : copy.play}
                   title={isPlaying ? copy.pause : copy.play}

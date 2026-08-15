@@ -74,9 +74,8 @@ export function PartyScene() {
       {/* ── Background with parallax ────────────────────────────── */}
       <div ref={bgRef} className="scene-bg" />
 
-      {/* ── Lighting + Lasers + Particles ──────────────────────── */}
+      {/* ── Lighting + Particles ──────────────────────── */}
       <Lighting isPlaying={isPlaying} isMobile={isMobile} />
-      <Lasers isPlaying={isPlaying} isMobile={isMobile} />
       <Particles isPlaying={isPlaying} isMobile={isMobile} />
 
       {/* ── Crowd (in front of booth, behind DJ) ──────────────── */}
@@ -137,22 +136,9 @@ const BEAMS = [
   { color: '#5fb87a', delay: '0.2s', duration: '3.0s', startAngle:  20, left: '88%' },
 ];
 
-function Lighting({ isPlaying, isMobile = false }: { isPlaying: boolean; isMobile?: boolean }) {
-  const beams = isMobile ? BEAMS.slice(0, 2) : BEAMS;
+function Lighting({ isPlaying }: { isPlaying: boolean; isMobile?: boolean }) {
   return (
     <div className={`lighting ${isPlaying ? 'lighting--party' : 'lighting--dim'}`} aria-hidden>
-      {beams.map((beam, i) => (
-        <div
-          key={i}
-          className="lighting-beam"
-          style={{
-            ['--lc' as string]: beam.color,
-            ['--ld' as string]: beam.delay,
-            ['--ldu' as string]: beam.duration,
-            left: beam.left,
-          } as React.CSSProperties}
-        />
-      ))}
       <div className="lighting-floor" />
     </div>
   );
