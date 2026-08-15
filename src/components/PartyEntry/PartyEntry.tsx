@@ -54,26 +54,33 @@ export function PartyEntry({ onComplete }: PartyEntryProps) {
           {stage === 'reveal' && (
             <motion.div
               key="youre-in"
-              className="pe-text-overlay pe-text-overlay--big"
-              initial={{ opacity: 0, scale: 0.7 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 1.2 }}
-              transition={{ type: 'spring', stiffness: 200 }}
+              className="pe-text-overlay"
+              initial={{ opacity: 0, scale: 0.85, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 1.1, y: -20 }}
+              transition={{ type: 'spring', stiffness: 180, damping: 18 }}
             >
-              YOU'RE IN
+              <div className="pe-youre-in">
+                <span className="pe-youre-in-line" />
+                <span className="pe-youre-in-text">YOU'RE IN</span>
+                <span className="pe-youre-in-line" />
+              </div>
             </motion.div>
           )}
           {stage === 'welcome' && (
             <motion.div
               key="welcome"
-              className="pe-text-overlay pe-text-overlay--welcome"
-              initial={{ opacity: 0, y: 20 }}
+              className="pe-text-overlay"
+              initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
-              <span className="pe-welcome-sub">WELCOME TO</span>
-              <span className="pe-welcome-main">PARTY WALE</span>
+              <div className="pe-welcome-block">
+                <span className="pe-welcome-eyebrow">WELCOME TO</span>
+                <span className="pe-welcome-wordmark">PARTY WALE</span>
+                <span className="pe-welcome-tagline">The night is just getting started</span>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

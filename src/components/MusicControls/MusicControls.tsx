@@ -4,7 +4,7 @@ import { useParty } from '../../contexts/PartyContext';
 import { playlist } from '../../data/playlist';
 import {
   IconPlay, IconPause, IconSkipBack, IconSkipForward,
-  IconShare, IconCheck, IconList, IconAlert,
+  IconShare, IconCheck, IconList, IconAlert, IconShuffle,
 } from '../Icons/Icons';
 import './MusicControls.css';
 
@@ -115,6 +115,7 @@ export function MusicControls() {
   const {
     currentSong, currentSongIndex, isPlaying, isBuffering,
     isUnavailable, isReady, player, play, pause, next, previous, jumpToSong,
+    isShuffled, toggleShuffle,
   } = useParty();
 
   const [expanded, setExpanded] = useState(false);
@@ -294,8 +295,16 @@ export function MusicControls() {
 
               {/* Controls */}
               <div className="pill-controls-row">
-                {/* Left: aux */}
+                {/* Left: shuffle + share */}
                 <div className="pill-controls-left">
+                  <button
+                    className={`pill-btn pill-btn--sm ${isShuffled ? 'pill-btn--active' : ''}`}
+                    onClick={toggleShuffle}
+                    aria-label={isShuffled ? 'Shuffle on' : 'Shuffle off'}
+                    title={isShuffled ? 'Shuffle: ON' : 'Shuffle: OFF'}
+                  >
+                    <IconShuffle size={14} />
+                  </button>
                   <ShareBtn />
                 </div>
 

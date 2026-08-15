@@ -46,6 +46,8 @@ export interface PartyContextValue {
   next: () => void;
   previous: () => void;
   jumpToSong: (index: number) => void;
+  isShuffled: boolean;
+  toggleShuffle: () => void;
 
   // Called by YouTubePlayer component
   handlePlayerReady: (player: YT.Player) => void;
@@ -80,6 +82,8 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
   const [partyEnergy, setPartyEnergy] = useState(0);
   const [bassDropActive, setBassDropActive] = useState(false);
   const [ticketNumber] = useState(generateTicketNumber);
+  const [isShuffled, setIsShuffled] = useState(false);
+  const isShuffledRef = useRef(false);
 
   const beatControllerRef = useRef<ReturnType<typeof createBeatController> | null>(null);
   const bassDropTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -197,10 +201,28 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
 
   const play = useCallback(() => playerRef.current?.playVideo(), []);
   const pause = useCallback(() => playerRef.current?.pauseVideo(), []);
+
+  const toggleShuffle = useCallback(() => {
+    setIsShuffled((prev) => {
+      isShuffledRef.current = !prev;
+      return !prev;
+    });
+  }, []);
+
   const next = useCallback(() => {
     stopBeatController();
-    skipToNext();
-  }, [stopBeatController, skipToNext]);
+    if (isShuffledRef.current) {
+      // Pick a random song that is not the current one
+      let nextIndex: number;
+      do {
+        nextIndex = Math.floor(Math.random() * playlist.length);
+      } while (nextIndex === currentSongIndex && playlist.length > 1);
+      setCurrentSongIndex(nextIndex);
+      setIsUnavailable(false);
+    } else {
+      skipToNext();
+    }
+  }, [stopBeatController, skipToNext, currentSongIndex]);
   const previous = useCallback(() => {
     stopBeatController();
     setCurrentSongIndex((prev) => (prev - 1 + playlist.length) % playlist.length);
@@ -243,6 +265,8 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
         next,
         previous,
         jumpToSong,
+        isShuffled,
+        toggleShuffle,
         handlePlayerReady,
         handleStateChange,
         handleError,

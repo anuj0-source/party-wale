@@ -98,45 +98,79 @@
   position: relative;
   z-index: 5;
   text-align: center;
+  pointer-events: none;
 }
 
-.pe-text-overlay--big {
-  font-family: 'Orbitron', monospace;
-  font-size: clamp(2.5rem, 8vw, 5rem);
-  font-weight: 900;
-  color: #fff;
+/* ── YOU'RE IN ── */
+.pe-youre-in {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.pe-youre-in-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.5), transparent);
+  max-width: 120px;
+}
+
+.pe-youre-in-text {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(1.6rem, 6vw, 3.8rem);
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: #ffffff;
   text-shadow:
-    0 0 20px rgba(255, 0, 144, 1),
-    0 0 60px rgba(255, 0, 144, 0.7),
-    0 0 100px rgba(255, 0, 144, 0.4);
-  letter-spacing: 4px;
+    0 0 30px rgba(255, 255, 255, 0.5),
+    0 0 80px rgba(255, 0, 144, 0.4);
+  white-space: nowrap;
 }
 
-.pe-text-overlay--welcome {
+/* ── WELCOME BLOCK ── */
+.pe-welcome-block {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
 }
 
-.pe-welcome-sub {
-  font-family: 'Rajdhani', sans-serif;
-  font-size: clamp(0.8rem, 2.5vw, 1.2rem);
-  color: rgba(0, 255, 255, 0.8);
-  letter-spacing: 6px;
+.pe-welcome-eyebrow {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.65rem, 2vw, 0.9rem);
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  color: rgba(255, 255, 255, 0.55);
   text-transform: uppercase;
 }
 
-.pe-welcome-main {
-  font-family: 'Orbitron', monospace;
-  font-size: clamp(2rem, 7vw, 4.5rem);
+.pe-welcome-wordmark {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(2.5rem, 9vw, 6rem);
   font-weight: 900;
-  color: #fff;
-  text-shadow:
-    0 0 20px rgba(255, 204, 0, 1),
-    0 0 60px rgba(255, 204, 0, 0.7),
-    0 0 100px rgba(255, 204, 0, 0.3);
-  letter-spacing: 4px;
+  letter-spacing: -0.01em;
+  line-height: 1;
+  background: linear-gradient(
+    135deg,
+    #ffffff 0%,
+    #ffb3dd 40%,
+    #ff0090 70%,
+    #aa00ff 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 30px rgba(255, 0, 144, 0.5));
+}
+
+.pe-welcome-tagline {
+  font-family: 'Inter', sans-serif;
+  font-size: clamp(0.7rem, 2vw, 0.95rem);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 4px;
+  font-style: italic;
 }
 
 /* ── Doors ─────────────────────────────────────────────────────────────── */

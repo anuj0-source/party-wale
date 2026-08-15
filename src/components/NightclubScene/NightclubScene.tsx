@@ -9,6 +9,7 @@ import { Particles } from '../Particles/Particles';
 import { YouTubePlayer } from '../YouTubePlayer/YouTubePlayer';
 import { MusicControls } from '../MusicControls/MusicControls';
 import { TicketModal } from '../TicketModal/TicketModal';
+import { ActiveUsers } from '../ActiveUsers/ActiveUsers';
 import './NightclubScene.css';
 
 export function NightclubScene() {
@@ -88,6 +89,9 @@ export function NightclubScene() {
           <span>LOADING...</span>
         </div>
       )}
+
+      {/* ── Active Users Badge ── */}
+      <ActiveUsers />
 
       {/* ── Layer 8: Top bar (minimal) ── */}
       <div className="scene-topbar">
