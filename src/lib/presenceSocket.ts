@@ -14,8 +14,12 @@ function connect() {
     return; // already alive
   }
 
-  const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  socket = new WebSocket(`${protocol}://${location.host}/ws`);
+  const isDev = import.meta.env.DEV;
+  const wsUrl = isDev
+    ? `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws`
+    : 'wss://party-wale-1.onrender.com';
+  
+  socket = new WebSocket(wsUrl);
 
   socket.onmessage = (event) => {
     try {
