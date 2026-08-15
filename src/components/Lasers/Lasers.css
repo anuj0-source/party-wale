@@ -1,0 +1,52 @@
+.lasers-wrapper {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.laser-line {
+  position: absolute;
+  width: 2px;
+  height: 60%;
+  background: linear-gradient(to bottom, var(--lc), transparent);
+  transform-origin: top left;
+  transform: rotate(var(--la));
+  opacity: 0;
+  box-shadow: 0 0 6px 2px var(--lc);
+  transition: opacity 0.5s ease;
+  will-change: transform;
+}
+
+/* Dim */
+.lasers--dim .laser-line {
+  opacity: 0.03;
+}
+
+/* Party */
+.lasers--party .laser-line {
+  opacity: 0.6;
+  animation: laser-sweep var(--ldu) ease-in-out infinite alternate;
+  animation-delay: var(--ld);
+}
+
+@keyframes laser-sweep {
+  from { transform: rotate(calc(var(--la) - 20deg)); opacity: 0.3; }
+  to { transform: rotate(calc(var(--la) + 20deg)); opacity: 0.7; }
+}
+
+/* Bass Drop */
+.lasers--bassdrop .laser-line {
+  opacity: 1 !important;
+  animation: laser-burst 0.1s ease-in-out infinite alternate !important;
+}
+
+@keyframes laser-burst {
+  from { transform: rotate(calc(var(--la) - 40deg)) scaleY(1.2); opacity: 0.7; }
+  to { transform: rotate(calc(var(--la) + 40deg)) scaleY(1.5); opacity: 1; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .laser-line { animation: none !important; opacity: 0.1; }
+}

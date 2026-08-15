@@ -1,0 +1,89 @@
+/* ── Google Fonts ──────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+
+/* ── CSS Design Tokens ─────────────────────────────────────────────────────── */
+:root {
+  /* Colors */
+  --color-bg:          #050510;
+  --color-bg-deep:     #020208;
+  --color-pink:        #ff0090;
+  --color-pink-dim:    rgba(255, 0, 144, 0.15);
+  --color-cyan:        #00ffff;
+  --color-cyan-dim:    rgba(0, 255, 255, 0.15);
+  --color-gold:        #ffcc00;
+  --color-purple:      #aa00ff;
+  --color-green:       #00ff88;
+  --color-orange:      #ff6600;
+
+  /* Typography */
+  --font-display:      'Orbitron', monospace;
+  --font-body:         'Rajdhani', sans-serif;
+
+  /* Glow values */
+  --glow-pink:         0 0 20px rgba(255, 0, 144, 0.7);
+  --glow-cyan:         0 0 20px rgba(0, 255, 255, 0.7);
+  --glow-gold:         0 0 20px rgba(255, 204, 0, 0.7);
+}
+
+/* ── Global Reset ──────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background: var(--color-bg);
+  color: #fff;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* ── Scrollbar ─────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 0, 144, 0.3);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 0, 144, 0.6);
+}
+
+/* ── Focus visible (accessibility) ─────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Reduced motion: disable all CSS animations globally ───────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

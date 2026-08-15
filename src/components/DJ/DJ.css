@@ -1,0 +1,255 @@
+.dj-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  width: 120px;
+  flex-shrink: 0;
+}
+
+/* ── DJ Booth ─────────────────────────────────────────────────────────────── */
+.dj-booth {
+  width: 120px;
+  background: linear-gradient(160deg, #1a0030, #0d001a);
+  border: 1px solid rgba(255, 0, 144, 0.4);
+  border-radius: 10px 10px 4px 4px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  box-shadow: 0 0 20px rgba(255, 0, 144, 0.2);
+}
+
+.dj-booth-screen {
+  background: #000;
+  border-radius: 4px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.dj-booth-idle-text {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.dj-booth-waveform {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 100%;
+  padding: 4px;
+}
+
+.dj-waveform-bar {
+  width: 3px;
+  border-radius: 1px;
+  background: linear-gradient(to top, #ff0090, #00ffff);
+  animation: waveform-bounce calc(0.4s + var(--bi) * 0.05s) ease-in-out infinite alternate;
+}
+
+@keyframes waveform-bounce {
+  from { height: 20%; }
+  to { height: 90%; }
+}
+
+.dj-booth-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.dj-knob {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #888, #333);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dj-knob--big {
+  width: 16px;
+  height: 16px;
+}
+
+.dj-booth-platter {
+  display: flex;
+  justify-content: space-around;
+}
+
+.dj-platter {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #444 20%, #222 50%, #333 70%, #111 100%);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 4px rgba(0,0,0,0.8);
+}
+
+.dj--dancing .dj-platter {
+  animation: platter-spin 0.8s linear infinite;
+}
+
+@keyframes platter-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ── DJ Character ─────────────────────────────────────────────────────────── */
+.dj-character {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.dj-head {
+  position: relative;
+  width: 32px;
+  height: 32px;
+}
+
+.dj-face {
+  width: 28px;
+  height: 28px;
+  background: #d4a574;
+  border-radius: 50% 50% 45% 45%;
+  position: absolute;
+  bottom: 0;
+  left: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dj-eyes {
+  display: flex;
+  gap: 6px;
+  margin-top: -4px;
+}
+
+.dj-eye {
+  width: 4px;
+  height: 4px;
+  background: #1a0030;
+  border-radius: 50%;
+}
+
+.dj-headphones {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+}
+
+.dj-headband {
+  position: absolute;
+  top: 0;
+  left: 2px;
+  right: 2px;
+  height: 12px;
+  border: 3px solid #333;
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+}
+
+.dj-headphone {
+  position: absolute;
+  top: 6px;
+  width: 8px;
+  height: 10px;
+  background: #333;
+  border-radius: 3px;
+}
+
+.dj-headphone--left { left: -2px; }
+.dj-headphone--right { right: -2px; }
+
+.dj-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.dj-torso {
+  width: 26px;
+  height: 30px;
+  background: linear-gradient(to bottom, #ff0090, #880044);
+  border-radius: 4px 4px 6px 6px;
+}
+
+.dj-arm {
+  width: 8px;
+  height: 22px;
+  background: #d4a574;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+
+/* ── Dance Animations ─────────────────────────────────────────────────────── */
+.dj--idle .dj-character {
+  animation: dj-idle-sway 2s ease-in-out infinite alternate;
+}
+
+.dj--dancing .dj-character {
+  animation: dj-dance 0.3s ease-in-out infinite alternate;
+}
+
+.dj--dancing .dj-arm--left {
+  animation: arm-pump-l 0.3s ease-in-out infinite alternate;
+  transform-origin: top center;
+}
+
+.dj--dancing .dj-arm--right {
+  animation: arm-pump-r 0.3s ease-in-out infinite alternate;
+  transform-origin: top center;
+}
+
+@keyframes dj-idle-sway {
+  from { transform: rotate(-2deg) translateY(0); }
+  to { transform: rotate(2deg) translateY(-3px); }
+}
+
+@keyframes dj-dance {
+  from { transform: rotate(-8deg) translateY(0) scale(1); }
+  to { transform: rotate(8deg) translateY(-8px) scale(1.05); }
+}
+
+@keyframes arm-pump-l {
+  from { transform: rotate(-30deg); }
+  to { transform: rotate(10deg); }
+}
+
+@keyframes arm-pump-r {
+  from { transform: rotate(30deg); }
+  to { transform: rotate(-10deg); }
+}
+
+/* ── Bass Drop ─────────────────────────────────────────────────────────────── */
+.dj--bassdrop .dj-character {
+  animation: bassdrop-jump 0.15s ease-in-out infinite alternate !important;
+}
+
+@keyframes bassdrop-jump {
+  from { transform: scale(1) translateY(0); }
+  to { transform: scale(1.15) translateY(-12px); }
+}
+
+.dj-bassdrop-flash {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 0, 144, 0.6) 0%, transparent 70%);
+  animation: flash-pulse 0.1s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes flash-pulse {
+  from { opacity: 0.5; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1.2); }
+}

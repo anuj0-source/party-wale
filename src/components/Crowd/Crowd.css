@@ -1,0 +1,82 @@
+.crowd-wrapper {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(4px, 1vw, 10px);
+  width: 100%;
+  padding: 0 8px;
+}
+
+.crowd-person {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.crowd-emoji {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  filter: drop-shadow(0 0 6px rgba(255, 0, 144, 0.5));
+  transition: filter 0.3s ease;
+}
+
+.crowd-silhouette {
+  width: clamp(10px, 2vw, 16px);
+  height: clamp(20px, 4vw, 32px);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px 4px 0 0;
+  margin-top: -4px;
+}
+
+/* ── Idle ─────────────────────────────────────────────────────────────────── */
+.crowd--idle .crowd-person {
+  animation: crowd-idle-sway calc(var(--cd-speed) * 6) ease-in-out infinite alternate;
+  animation-delay: var(--cd-offset);
+}
+
+@keyframes crowd-idle-sway {
+  from { transform: rotate(-2deg); }
+  to { transform: rotate(2deg); }
+}
+
+/* ── Dancing ─────────────────────────────────────────────────────────────── */
+.crowd--dancing .crowd-person {
+  animation: crowd-dance var(--cd-speed) ease-in-out infinite alternate;
+  animation-delay: var(--cd-offset);
+}
+
+.crowd--dancing .crowd-emoji {
+  filter: drop-shadow(0 0 10px rgba(255, 0, 144, 0.8));
+}
+
+@keyframes crowd-dance {
+  from {
+    transform: translateY(0) rotate(-10deg) scale(1);
+  }
+  to {
+    transform: translateY(-12px) rotate(10deg) scale(1.08);
+  }
+}
+
+/* ── Bass Drop ─────────────────────────────────────────────────────────── */
+.crowd--bassdrop .crowd-person {
+  animation: crowd-bassdrop 0.12s ease-in-out infinite alternate !important;
+}
+
+.crowd--bassdrop .crowd-emoji {
+  filter: drop-shadow(0 0 16px rgba(255, 204, 0, 1)) !important;
+}
+
+@keyframes crowd-bassdrop {
+  from { transform: translateY(0) scale(1); }
+  to { transform: translateY(-20px) scale(1.15); }
+}
+
+/* ── Reduced Motion ─────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .crowd--dancing .crowd-person,
+  .crowd--idle .crowd-person,
+  .crowd--bassdrop .crowd-person {
+    animation: none;
+  }
+}

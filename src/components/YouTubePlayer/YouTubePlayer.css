@@ -1,0 +1,67 @@
+.yt-player-wrapper {
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 0, 144, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.yt-player-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 0, 144, 0.15);
+  border-bottom: 1px solid rgba(255, 0, 144, 0.2);
+  font-family: 'Orbitron', monospace;
+  font-size: 0.65rem;
+  color: #ff0090;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.yt-icon {
+  font-size: 0.6rem;
+}
+
+.yt-player-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+}
+
+.yt-player-inner {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.yt-player-song-info {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 12px 8px;
+  gap: 2px;
+}
+
+.yt-now-label {
+  font-family: 'Orbitron', monospace;
+  font-size: 0.55rem;
+  color: rgba(0, 255, 255, 0.6);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.yt-song-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
