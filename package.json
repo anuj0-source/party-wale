@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start": "concurrently \"vite\" \"node server/presence.js\"",
     "dev": "concurrently \"vite\" \"node server/presence.js\"",
     "server": "node server/presence.js",
     "build": "tsc -b && vite build",
