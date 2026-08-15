@@ -6,6 +6,8 @@ type Listener = (count: number) => void;
 
 let socket: WebSocket | null = null;
 let retryTimer: ReturnType<typeof setTimeout> | null = null;
+let retryDelay = 2000; // starts at 2s, grows with backoff
+const MAX_RETRY_DELAY = 60000; // max 60s (handles Render free-tier cold start)
 const listeners = new Set<Listener>();
 let latestCount: number | null = null;
 
@@ -18,8 +20,12 @@ function connect() {
   const wsUrl = isDev
     ? `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.host}/ws`
     : 'wss://party-wale-1.onrender.com';
-  
+
   socket = new WebSocket(wsUrl);
+
+  socket.onopen = () => {
+    retryDelay = 2000; // reset backoff on successful connection
+  };
 
   socket.onmessage = (event) => {
     try {
@@ -33,8 +39,11 @@ function connect() {
 
   socket.onclose = () => {
     socket = null;
-    // Retry after 3s
-    retryTimer = setTimeout(connect, 3000);
+    // Exponential backoff so we survive Render's 50s+ cold-start
+    retryTimer = setTimeout(() => {
+      retryDelay = Math.min(retryDelay * 1.5, MAX_RETRY_DELAY);
+      connect();
+    }, retryDelay);
   };
 
   socket.onerror = () => {

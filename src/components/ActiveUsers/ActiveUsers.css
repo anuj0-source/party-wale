@@ -53,3 +53,19 @@
   color: rgba(255, 255, 255, 0.9);
   letter-spacing: 0.2px;
 }
+
+.active-users-badge--connecting {
+  opacity: 0.6;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.active-users-dot--pulse {
+  background: #ffcc00;
+  box-shadow: 0 0 8px rgba(255, 204, 0, 0.8);
+  animation: pulse-connecting 1s ease-in-out infinite;
+}
+
+@keyframes pulse-connecting {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
