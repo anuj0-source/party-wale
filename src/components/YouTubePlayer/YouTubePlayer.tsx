@@ -1,26 +1,26 @@
 import React, { useEffect, useRef } from 'react';
 import { useParty } from '../../contexts/PartyContext';
 import { playlist } from '../../data/playlist';
-import './YouTubePlayer.css';
 
 /**
- * Mounts the official YouTube IFrame Player in a visible, integrated area.
- * Handles onReady, onStateChange, onError, onPlaybackQualityChange.
+ * Mounts the YouTube IFrame API player.
+ * The iframe is kept at 1px so the API works, but is invisible to the user.
+ * All visible controls are in MusicControls.tsx.
  */
 export function YouTubePlayer() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { handlePlayerReady, handleStateChange, handleError, currentSong } = useParty();
+  const { handlePlayerReady, handleStateChange, handleError } = useParty();
 
   useEffect(() => {
     const initPlayer = () => {
       if (!containerRef.current) return;
       new window.YT.Player(containerRef.current, {
-        height: '100%',
-        width: '100%',
+        height: '1',
+        width: '1',
         videoId: playlist[0].youtubeId,
         playerVars: {
           autoplay: 0,
-          controls: 1,
+          controls: 0,
           rel: 0,
           playsinline: 1,
           enablejsapi: 1,
@@ -30,7 +30,6 @@ export function YouTubePlayer() {
           onReady: (e) => handlePlayerReady(e.target),
           onStateChange: (e) => handleStateChange(e.data as YT.PlayerState),
           onError: (e) => handleError(e.data),
-          onPlaybackQualityChange: () => {},
         },
       });
     };
@@ -38,7 +37,6 @@ export function YouTubePlayer() {
     if (window.YT && window.YT.Player) {
       initPlayer();
     } else {
-      // Load the YouTube IFrame API script
       const existingScript = document.getElementById('yt-iframe-api');
       if (!existingScript) {
         const script = document.createElement('script');
@@ -51,18 +49,23 @@ export function YouTubePlayer() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Invisible 1×1 pixel iframe container — API requires it in the DOM
   return (
-    <div className="yt-player-wrapper">
-      <div className="yt-player-label">
-        <span className="yt-icon">▶</span> YouTube
-      </div>
-      <div className="yt-player-frame">
-        <div ref={containerRef} className="yt-player-inner" />
-      </div>
-      <div className="yt-player-song-info">
-        <span className="yt-now-label">NOW PLAYING</span>
-        <span className="yt-song-title">{currentSong.title}</span>
-      </div>
+    <div
+      aria-hidden="true"
+      style={{
+        position: 'fixed',
+        bottom: 0,
+        right: 0,
+        width: 1,
+        height: 1,
+        overflow: 'hidden',
+        pointerEvents: 'none',
+        opacity: 0,
+        zIndex: -1,
+      }}
+    >
+      <div ref={containerRef} />
     </div>
   );
 }

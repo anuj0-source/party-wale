@@ -176,14 +176,10 @@
 /* ── Bottom panel ── */
 .scene-bottom {
   display: grid;
-  grid-template-columns: 300px 1fr 200px;
+  grid-template-columns: 1fr 200px;
   gap: 12px;
   flex-shrink: 0;
   align-items: start;
-}
-
-.scene-yt-panel {
-  min-width: 0;
 }
 
 .scene-controls-panel {
@@ -199,12 +195,7 @@
 /* ── Mobile ── */
 @media (max-width: 639px) {
   .scene-bottom {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-  }
-
-  .scene-yt-panel {
-    grid-column: 1 / -1;
+    grid-template-columns: 1fr;
   }
 
   .scene-controls-panel {

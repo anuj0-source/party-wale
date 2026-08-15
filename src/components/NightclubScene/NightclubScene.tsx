@@ -91,14 +91,9 @@ export function NightclubScene() {
           <Crowd isPlaying={isPlaying} bassDropActive={bassDropActive} isMobile={isMobile} />
         </div>
 
-        {/* ── Bottom: player panel ── */}
+        {/* ── Bottom: controls panel ── */}
         <div className="scene-bottom">
-          {/* YouTube player (visible, integrated) */}
-          <div className="scene-yt-panel">
-            <YouTubePlayer />
-          </div>
-
-          {/* Music controls */}
+          {/* Music controls (full width, no YT panel) */}
           <div className="scene-controls-panel">
             <MusicControls />
           </div>
@@ -110,6 +105,9 @@ export function NightclubScene() {
             </div>
           )}
         </div>
+
+        {/* YouTube IFrame API — invisible 1×1px, required for playback */}
+        <YouTubePlayer />
 
         {/* ── Mobile: stats + share stacked below ── */}
         {isMobile && (
