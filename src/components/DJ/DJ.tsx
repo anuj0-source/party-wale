@@ -3,7 +3,6 @@ import './DJ.css';
 
 interface DJProps {
   isPlaying: boolean;
-  bassDropActive: boolean;
 }
 
 /**
@@ -17,10 +16,10 @@ interface DJProps {
  * This makes the background DJ feel "live" and integrated without
  * placing a competing CSS stick figure over him.
  */
-export function DJ({ isPlaying, bassDropActive }: DJProps) {
+export function DJ({ isPlaying }: DJProps) {
   return (
     <div
-      className={`dj-overlay ${isPlaying ? 'dj--playing' : 'dj--idle'} ${bassDropActive ? 'dj--bassdrop' : ''}`}
+      className={`dj-overlay ${isPlaying ? 'dj--playing' : 'dj--idle'}`}
       aria-label="DJ booth"
     >
       {/* Booth backlight glow — behind the DJ */}
@@ -43,11 +42,6 @@ export function DJ({ isPlaying, bassDropActive }: DJProps) {
             />
           ))}
         </div>
-      )}
-
-      {/* Bass drop burst */}
-      {bassDropActive && (
-        <div className="dj-bassdrop-burst" aria-hidden="true" />
       )}
     </div>
   );

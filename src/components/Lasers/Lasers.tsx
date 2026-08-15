@@ -3,7 +3,6 @@ import './Lasers.css';
 
 interface LasersProps {
   isPlaying: boolean;
-  bassDropActive: boolean;
   isMobile?: boolean;
 }
 
@@ -23,23 +22,16 @@ const BASSDROP_LASERS = [
   { color: '#ff4400', x: '75%',  y: '0%',  angle: -38,  duration: '0.32s', delay: '0.03s' },
 ];
 
-export function Lasers({ isPlaying, bassDropActive, isMobile = false }: LasersProps) {
-  // During idle — no lasers
-  if (!isPlaying && !bassDropActive) return null;
+export function Lasers({ isPlaying, isMobile = false }: LasersProps) {
+  if (!isPlaying) return null;
 
-  // Which set to show
-  const activeLasers = bassDropActive
-    ? (isMobile ? BASSDROP_LASERS.slice(0, 4) : BASSDROP_LASERS)
-    : (isMobile ? AMBIENT_LASERS.slice(0, 1) : AMBIENT_LASERS);
+  const activeLasers = isMobile ? AMBIENT_LASERS.slice(0, 1) : AMBIENT_LASERS;
 
   return (
-    <div
-      className={`lasers-wrapper ${bassDropActive ? 'lasers--bassdrop' : 'lasers--ambient'}`}
-      aria-hidden="true"
-    >
+    <div className="lasers-wrapper lasers--ambient" aria-hidden="true">
       {activeLasers.map((laser, i) => (
         <div
-          key={`${bassDropActive ? 'bd' : 'am'}-${i}`}
+          key={`am-${i}`}
           className="laser-line"
           style={{
             '--lc':  laser.color,

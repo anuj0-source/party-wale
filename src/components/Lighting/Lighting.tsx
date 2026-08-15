@@ -3,7 +3,6 @@ import './Lighting.css';
 
 interface LightingProps {
   isPlaying: boolean;
-  bassDropActive: boolean;
   isMobile?: boolean;
 }
 
@@ -16,11 +15,11 @@ const BEAMS = [
   { color: '#00ff88', delay: '0.6s', duration: '1.8s', startAngle: 5 },
 ];
 
-export function Lighting({ isPlaying, bassDropActive, isMobile = false }: LightingProps) {
+export function Lighting({ isPlaying, isMobile = false }: LightingProps) {
   const beams = isMobile ? BEAMS.slice(0, 3) : BEAMS;
 
   return (
-    <div className={`lighting-wrapper ${isPlaying ? 'lighting--party' : 'lighting--dim'} ${bassDropActive ? 'lighting--bassdrop' : ''}`}>
+    <div className={`lighting-wrapper ${isPlaying ? 'lighting--party' : 'lighting--dim'}`}>
       {beams.map((beam, i) => (
         <div
           key={i}
@@ -36,8 +35,6 @@ export function Lighting({ isPlaying, bassDropActive, isMobile = false }: Lighti
       ))}
       {/* Ambient glow from floor */}
       <div className="lighting-floor-glow" />
-      {/* Strobe on bass drop */}
-      {bassDropActive && <div className="lighting-strobe" aria-hidden="true" />}
     </div>
   );
 }

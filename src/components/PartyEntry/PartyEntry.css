@@ -19,8 +19,9 @@
 .pe-scene-bg {
   position: absolute;
   inset: 0;
-  background: url('/nightclub-bg.png') center center / cover no-repeat;
-  filter: brightness(0.7) saturate(1.2);
+  /* Base atmospheric background revealing the club interior */
+  background: url('/bg.png') center center / cover no-repeat;
+  filter: brightness(0.6) saturate(1.1);
 }
 
 /* ── Light beams ────────────────────────────────────────────────────────── */

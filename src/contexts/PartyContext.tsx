@@ -35,7 +35,6 @@ export interface PartyContextValue {
 
   // Music-Synchronized Visuals state
   partyEnergy: number;
-  bassDropActive: boolean;
 
   // Ticket
   ticketNumber: string;
@@ -80,13 +79,11 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
   const [isReady, setIsReady] = useState(false);
   const [isUnavailable, setIsUnavailable] = useState(false);
   const [partyEnergy, setPartyEnergy] = useState(0);
-  const [bassDropActive, setBassDropActive] = useState(false);
   const [ticketNumber] = useState(generateTicketNumber);
   const [isShuffled, setIsShuffled] = useState(false);
   const isShuffledRef = useRef(false);
 
   const beatControllerRef = useRef<ReturnType<typeof createBeatController> | null>(null);
-  const bassDropTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const playerRef = useRef<YT.Player | null>(null);
 
   const currentSong = playlist[currentSongIndex];
@@ -113,11 +110,7 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
         song,
         getTime: () => playerRef.current?.getCurrentTime() ?? 0,
         callbacks: {
-          onBassDrop: () => {
-            setBassDropActive(true);
-            if (bassDropTimeoutRef.current) clearTimeout(bassDropTimeoutRef.current);
-            bassDropTimeoutRef.current = setTimeout(() => setBassDropActive(false), 1200);
-          },
+          onBassDrop: () => {},
           onEnergyChange: setPartyEnergy,
           onPartyModeChange: () => {},
         },
@@ -240,7 +233,6 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     return () => {
       stopBeatController();
-      if (bassDropTimeoutRef.current) clearTimeout(bassDropTimeoutRef.current);
     };
   }, [stopBeatController]);
 
@@ -258,7 +250,6 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
         isReady,
         isUnavailable,
         partyEnergy,
-        bassDropActive,
         ticketNumber,
         play,
         pause,

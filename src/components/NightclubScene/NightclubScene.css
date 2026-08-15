@@ -10,18 +10,41 @@
 .scene-bg {
   position: absolute;
   inset: 0;
-  background: url('/nightclub-bg.png') center center / cover no-repeat;
-  filter: brightness(0.45) saturate(1.1);
+  background: url('/bg.png') center center / cover no-repeat;
+  filter: brightness(0.65) saturate(1.1);
   z-index: 0;
   transition: filter 0.8s ease;
 }
 
 .scene--party .scene-bg {
-  filter: brightness(0.5) saturate(1.25);
+  filter: brightness(0.75) saturate(1.25);
+  animation: bg-groove 0.4s ease-in-out infinite alternate;
 }
 
 .scene--bassdrop .scene-bg {
-  filter: brightness(0.62) saturate(1.6);
+  filter: brightness(0.85) saturate(1.6);
+  animation: bg-shake 0.08s linear infinite;
+}
+
+/* ── Subtle groove while music plays ── */
+@keyframes bg-groove {
+  0%   { transform: scale(1.00) translate(0px, 0px); }
+  25%  { transform: scale(1.005) translate(-1px, 0.5px); }
+  50%  { transform: scale(1.007) translate(0.5px, -1px); }
+  75%  { transform: scale(1.004) translate(1px, 0.5px); }
+  100% { transform: scale(1.002) translate(-0.5px, 1px); }
+}
+
+/* ── Intense shake on bass drop ── */
+@keyframes bg-shake {
+  0%   { transform: scale(1.04) translate(0px, 0px) rotate(0deg); }
+  15%  { transform: scale(1.04) translate(-3px, 2px) rotate(-0.3deg); }
+  30%  { transform: scale(1.04) translate(3px, -2px) rotate(0.3deg); }
+  45%  { transform: scale(1.04) translate(-2px, -3px) rotate(-0.2deg); }
+  60%  { transform: scale(1.04) translate(4px, 1px) rotate(0.4deg); }
+  75%  { transform: scale(1.04) translate(-3px, 3px) rotate(-0.3deg); }
+  90%  { transform: scale(1.04) translate(2px, -1px) rotate(0.2deg); }
+  100% { transform: scale(1.04) translate(0px, 0px) rotate(0deg); }
 }
 
 /* ── Vignette overlay ──────────────────────────────────────────────────────── */
@@ -270,5 +293,5 @@
 @media (prefers-reduced-motion: reduce) {
   .scene--bassdrop { animation: none !important; }
   .scene-fog { animation: none !important; }
-  .scene-bg { transition: none !important; }
+  .scene-bg { transition: none !important; animation: none !important; }
 }

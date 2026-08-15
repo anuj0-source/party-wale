@@ -14,7 +14,7 @@ import { SocialLinks } from '../SocialLinks/SocialLinks';
 import './NightclubScene.css';
 
 export function NightclubScene() {
-  const { isPlaying, bassDropActive, isReady, ticketNumber } = useParty();
+  const { isPlaying, isReady, ticketNumber } = useParty();
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   const [ticketOpen, setTicketOpen] = useState(false);
 
@@ -25,7 +25,7 @@ export function NightclubScene() {
   }, []);
 
   return (
-    <div className={`nightclub-scene ${isPlaying ? 'scene--party' : 'scene--ambient'} ${bassDropActive ? 'scene--bassdrop' : ''}`}>
+    <div className={`nightclub-scene ${isPlaying ? 'scene--party' : 'scene--ambient'}`}>
 
       {/* ── Layer 1: Background ── */}
       <div className="scene-bg" />
@@ -37,51 +37,19 @@ export function NightclubScene() {
       <div className="scene-fog" aria-hidden="true" />
 
       {/* ── Layer 3: Lighting (spotlights) ── */}
-      <Lighting isPlaying={isPlaying} bassDropActive={bassDropActive} isMobile={isMobile} />
+      <Lighting isPlaying={isPlaying} isMobile={isMobile} />
 
       {/* ── Layer 4: Lasers (reduced, event-driven) ── */}
-      <Lasers isPlaying={isPlaying} bassDropActive={bassDropActive} isMobile={isMobile} />
+      <Lasers isPlaying={isPlaying} isMobile={isMobile} />
 
       {/* ── Layer 5: Particles (atmospheric dust) ── */}
-      <Particles isPlaying={isPlaying} bassDropActive={bassDropActive} isMobile={isMobile} />
+      <Particles isPlaying={isPlaying} isMobile={isMobile} />
 
       {/* ── Layer 6: DJ at centre-back ── */}
       <div className="scene-dj-layer">
-        <DJ isPlaying={isPlaying} bassDropActive={bassDropActive} />
+        <DJ isPlaying={isPlaying} />
       </div>
 
-      {/* ── Layer 7: Crowd removed ── */}
-
-      {/* ── Bass drop flash ── */}
-      <AnimatePresence>
-        {bassDropActive && (
-          <motion.div
-            className="scene-bassdrop-flash"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 1, 0] }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, times: [0, 0.1, 1] }}
-          />
-        )}
-      </AnimatePresence>
-
-      {/* ── Bass drop text ── */}
-      <AnimatePresence>
-        {bassDropActive && (
-          <div className="scene-bassdrop-wrapper">
-            <motion.div
-              className="scene-bassdrop-banner"
-              initial={{ opacity: 0, scale: 0.8, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 1.1, y: -30 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            >
-              <div className="scene-bassdrop-title">BASS DROP</div>
-              <div className="scene-bassdrop-subtitle">ENERGY PEAK</div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
       {/* ── Loading ── */}
       {!isReady && (

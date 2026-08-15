@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useCallback } from 'react';
 
 interface ParticlesProps {
   isPlaying: boolean;
-  bassDropActive: boolean;
   isMobile?: boolean;
 }
 
@@ -28,12 +27,11 @@ function getParticleCount(isMobile: boolean, isReduced: boolean): number {
   return 80;  // Atmospheric dust — not a fireworks show
 }
 
-export function Particles({ isPlaying, bassDropActive, isMobile = false }: ParticlesProps) {
+export function Particles({ isPlaying, isMobile = false }: ParticlesProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const rafRef = useRef<number>(0);
   const isPlayingRef = useRef(isPlaying);
-  const bassDropRef = useRef(bassDropActive);
 
   const isReduced =
     typeof window !== 'undefined' &&
@@ -43,27 +41,24 @@ export function Particles({ isPlaying, bassDropActive, isMobile = false }: Parti
 
   const spawnParticle = useCallback((canvas: HTMLCanvasElement): Particle => {
     const color = COLORS[Math.floor(Math.random() * COLORS.length)];
-    // During bass drop → fast; playing → gentle float; idle → almost still
-    const speed = isPlayingRef.current
-      ? (bassDropRef.current ? 3.5 : 0.8)
-      : 0.25;
+    // playing → gentle float; idle → almost still
+    const speed = isPlayingRef.current ? 0.8 : 0.25;
     return {
       x: Math.random() * canvas.width,
       y: canvas.height + 10,
       vx: (Math.random() - 0.5) * speed,
       vy: -(Math.random() * speed + 0.2),
-      size: bassDropRef.current ? Math.random() * 2.5 + 0.8 : Math.random() * 1.2 + 0.3,
+      size: Math.random() * 1.2 + 0.3,
       color,
       alpha: 1,
       life: 0,
-      maxLife: bassDropRef.current ? 60 + Math.random() * 80 : 120 + Math.random() * 200,
+      maxLife: 120 + Math.random() * 200,
     };
   }, []);
 
   useEffect(() => {
     isPlayingRef.current = isPlaying;
-    bassDropRef.current = bassDropActive;
-  }, [isPlaying, bassDropActive]);
+  }, [isPlaying]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

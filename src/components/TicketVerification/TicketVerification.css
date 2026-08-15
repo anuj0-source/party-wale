@@ -1,7 +1,7 @@
 .ticket-screen {
   position: fixed;
   inset: 0;
-  background: radial-gradient(ellipse at center, #0a0020 0%, #050510 60%, #020208 100%);
+  background: linear-gradient(rgba(2, 2, 8, 0.1), rgba(2, 2, 8, 0.4)), url('/entry-bg.png') center center / cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;

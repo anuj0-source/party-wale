@@ -51,23 +51,7 @@ export function PartyEntry({ onComplete }: PartyEntryProps) {
 
         {/* Text overlays */}
         <AnimatePresence mode="wait">
-          {stage === 'reveal' && (
-            <motion.div
-              key="youre-in"
-              className="pe-text-overlay"
-              initial={{ opacity: 0, scale: 0.85, y: 10 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 1.1, y: -20 }}
-              transition={{ type: 'spring', stiffness: 180, damping: 18 }}
-            >
-              <div className="pe-youre-in">
-                <span className="pe-youre-in-line" />
-                <span className="pe-youre-in-text">YOU'RE IN</span>
-                <span className="pe-youre-in-line" />
-              </div>
-            </motion.div>
-          )}
-          {stage === 'welcome' && (
+          {(stage === 'reveal' || stage === 'welcome') && (
             <motion.div
               key="welcome"
               className="pe-text-overlay"
