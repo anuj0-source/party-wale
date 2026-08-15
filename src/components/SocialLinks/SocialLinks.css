@@ -1,38 +1,6 @@
-.social-links-container {
-  position: fixed;
-  top: 72px;
-  right: 24px;
-  z-index: 50;
+/* src/components/SocialLinks/SocialLinks.css */
+
+.social-links {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.social-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-  text-decoration: none;
-}
-
-.social-link:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
-  color: #fff;
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 24px rgba(255, 0, 144, 0.3), 0 0 10px rgba(255, 255, 255, 0.2) inset;
-}
-
-.social-link:active {
-  transform: translateY(1px) scale(0.95);
+  gap: 6px;
 }

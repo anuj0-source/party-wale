@@ -17,14 +17,14 @@ interface Particle {
   maxLife: number;
 }
 
-const COLORS = ['#ff0090', '#00ffff', '#ffcc00', '#aa00ff', '#00ff88', '#ff6600'];
+const COLORS = ['#f6b73c', '#ff3d77', '#19d3da', '#5fb87a', '#ffa6b9', '#f6ecd9'];
 
 function getParticleCount(isMobile: boolean, isReduced: boolean): number {
-  if (isReduced) return 8;
-  if (isMobile) return 35;
+  if (isReduced) return 6;
+  if (isMobile) return 20;
   const cpuCount = navigator.hardwareConcurrency ?? 4;
-  if (cpuCount <= 2) return 45;
-  return 80;  // Atmospheric dust — not a fireworks show
+  if (cpuCount <= 2) return 30;
+  return 50;  // Atmospheric dust — not a fireworks show
 }
 
 export function Particles({ isPlaying, isMobile = false }: ParticlesProps) {
@@ -56,9 +56,7 @@ export function Particles({ isPlaying, isMobile = false }: ParticlesProps) {
     };
   }, []);
 
-  useEffect(() => {
-    isPlayingRef.current = isPlaying;
-  }, [isPlaying]);
+  useEffect(() => { isPlayingRef.current = isPlaying; }, [isPlaying]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

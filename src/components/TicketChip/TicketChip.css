@@ -1,0 +1,30 @@
+/* src/components/TicketChip/TicketChip.css */
+
+.ticket-chip {
+  appearance: none;
+  border: 1.5px dashed rgba(246, 236, 217, 0.5);
+  background: rgba(20, 16, 28, 0.4);
+  color: var(--paper);
+  font-family: 'Caveat', cursive;
+  font-size: 18px;
+  padding: 3px 12px 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.15s var(--ease-paper), background 0.15s;
+  transform: rotate(2deg);
+  line-height: 1.1;
+}
+.ticket-chip:hover {
+  transform: rotate(-1deg) scale(1.05);
+  background: rgba(246, 183, 60, 0.18);
+  color: var(--mustard);
+  border-color: var(--mustard);
+}
+.ticket-chip::before {
+  content: '🎟';
+  font-size: 13px;
+  filter: saturate(0.7);
+}

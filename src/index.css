@@ -1,31 +1,47 @@
-/* ── Google Fonts ──────────────────────────────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap');
+/* ── Google Fonts ─────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800;9..144,900&family=Inter:wght@400;500;600;700&family=Caveat:wght@400;500;700&display=swap');
 
-/* ── CSS Design Tokens ─────────────────────────────────────────────────────── */
+/* ── Design Tokens ─────────────────────────────────────────────────────────── */
 :root {
-  /* Colors */
-  --color-bg:          #050510;
-  --color-bg-deep:     #020208;
-  --color-pink:        #ff0090;
-  --color-pink-dim:    rgba(255, 0, 144, 0.15);
-  --color-cyan:        #00ffff;
-  --color-cyan-dim:    rgba(0, 255, 255, 0.15);
-  --color-gold:        #ffcc00;
-  --color-purple:      #aa00ff;
-  --color-green:       #00ff88;
-  --color-orange:      #ff6600;
+  /* Surfaces */
+  --ink:           #14101c;       /* warm black */
+  --ink-2:         #2a1f3a;       /* deep purple */
+  --ink-3:         #3a2a4f;       /* lifted panel */
+  --paper:         #f6ecd9;       /* ticket paper */
+  --paper-shadow:  #d9c8a8;
+  --paper-deep:    #ecdfbe;
+
+  /* Accents */
+  --maroon:        #6b1535;
+  --maroon-deep:   #4a0d23;
+  --hot:           #ff3d77;
+  --hot-dim:       rgba(255, 61, 119, 0.15);
+  --cyan:          #19d3da;
+  --cyan-dim:      rgba(25, 211, 218, 0.18);
+  --mustard:       #f6b73c;
+  --mustard-dim:   rgba(246, 183, 60, 0.18);
+  --leaf:          #5fb87a;
+  --leaf-dim:      rgba(95, 184, 122, 0.18);
+  --rose:          #ffa6b9;
 
   /* Typography */
-  --font-display:      'Orbitron', monospace;
-  --font-body:         'Rajdhani', sans-serif;
+  --font-display:  'Fraunces', 'Times New Roman', serif;
+  --font-body:     'Inter', system-ui, -apple-system, sans-serif;
+  --font-hand:     'Caveat', 'Comic Sans MS', cursive;
 
-  /* Glow values */
-  --glow-pink:         0 0 20px rgba(255, 0, 144, 0.7);
-  --glow-cyan:         0 0 20px rgba(0, 255, 255, 0.7);
-  --glow-gold:         0 0 20px rgba(255, 204, 0, 0.7);
+  /* Effects */
+  --shadow-paper:  0 12px 30px rgba(20, 16, 28, 0.45), 0 2px 6px rgba(20, 16, 28, 0.35);
+  --shadow-tape:   0 2px 4px rgba(20, 16, 28, 0.25);
+  --tilt-1:        rotate(-1.2deg);
+  --tilt-2:        rotate(0.8deg);
+  --tilt-3:        rotate(-2deg);
+
+  /* Motion */
+  --ease-paper:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-tear:     cubic-bezier(0.76, 0, 0.24, 1);
 }
 
-/* ── Global Reset ──────────────────────────────────────────────────────────── */
+/* ── Global Reset ─────────────────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -39,12 +55,13 @@ html, body {
 }
 
 body {
-  background: var(--color-bg);
-  color: #fff;
+  background: var(--ink);
+  color: #f6ecd9;
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   user-select: none;
+  text-rendering: optimizeLegibility;
 }
 
 #root {
@@ -53,33 +70,26 @@ body {
   position: relative;
 }
 
-/* ── Scrollbar ─────────────────────────────────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
+img { display: block; max-width: 100%; }
+button { font-family: inherit; }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
+/* ── Scrollbar (paper) ────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: rgba(246, 236, 217, 0.04); }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 0, 144, 0.3);
-  border-radius: 2px;
+  background: rgba(246, 183, 60, 0.35);
+  border-radius: 3px;
 }
+::-webkit-scrollbar-thumb:hover { background: rgba(246, 183, 60, 0.55); }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 0, 144, 0.6);
-}
-
-/* ── Focus visible (accessibility) ─────────────────────────────────────────── */
+/* ── Focus visible ────────────────────────────────────────────────────────── */
 :focus-visible {
-  outline: 2px solid var(--color-cyan);
+  outline: 2px solid var(--mustard);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* ── Reduced motion: disable all CSS animations globally ───────────────────── */
+/* ── Reduced motion ───────────────────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -87,3 +97,15 @@ body {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ── Shared utilities ─────────────────────────────────────────────────────── */
+.pw-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(20, 16, 28, 0.2);
+  border-top-color: var(--ink);
+  border-radius: 50%;
+  animation: pw-spin 0.7s linear infinite;
+}
+@keyframes pw-spin { to { transform: rotate(360deg); } }

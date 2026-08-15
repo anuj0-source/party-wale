@@ -1,6 +1,4 @@
 import React, {
-  createContext,
-  useContext,
   useState,
   useRef,
   useCallback,
@@ -11,6 +9,10 @@ import { playlist } from '../data/playlist';
 import {
   createBeatController,
 } from '../party/partyBeatController';
+import { PartyContext } from './useParty';
+// PartyContext / useParty are re-exported from ./useParty (Fast Refresh requires
+// the file to export components only). Consumers should import from './useParty'
+// directly when convenient, but re-exporting keeps the old import path working.
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -52,16 +54,6 @@ export interface PartyContextValue {
   handlePlayerReady: (player: YT.Player) => void;
   handleStateChange: (state: YT.PlayerState) => void;
   handleError: (code: number) => void;
-}
-
-// ─── Context ─────────────────────────────────────────────────────────────────
-
-const PartyContext = createContext<PartyContextValue | null>(null);
-
-export function useParty(): PartyContextValue {
-  const ctx = useContext(PartyContext);
-  if (!ctx) throw new Error('useParty must be used inside PartyProvider');
-  return ctx;
 }
 
 // ─── Provider ────────────────────────────────────────────────────────────────

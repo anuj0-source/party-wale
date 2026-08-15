@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { useParty } from '../../contexts/PartyContext';
+import { useParty } from '../../contexts/useParty';
 import { playlist } from '../../data/playlist';
 
 /**

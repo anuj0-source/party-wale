@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { PartyProvider, useParty } from './contexts/PartyContext';
-import { TicketVerification } from './components/TicketVerification/TicketVerification';
-import { PartyEntry } from './components/PartyEntry/PartyEntry';
-import { NightclubScene } from './components/NightclubScene/NightclubScene';
+import { PartyProvider } from './contexts/PartyContext';
+import { useParty } from './contexts/useParty';
+import { TicketScreen } from './components/TicketScreen/TicketScreen';
+import { TornTicketEntry } from './components/PartyEntry/TornTicketEntry';
+import { PartyScene } from './components/PartyScene/PartyScene';
 
 // ── Inner app reads from context ─────────────────────────────────────────────
 function AppInner() {
   const { phase, setPhase, ticketNumber } = useParty();
+
+  // Update page title for the entry phase
+  useEffect(() => {
+    if (phase === 'ticket') document.title = 'Party Wale — Ticket';
+    if (phase === 'entry')  document.title = 'Party Wale — Entry';
+  }, [phase]);
 
   return (
     <AnimatePresence mode="wait">
@@ -20,7 +27,7 @@ function AppInner() {
           transition={{ duration: 0.5 }}
           style={{ position: 'fixed', inset: 0, zIndex: 100 }}
         >
-          <TicketVerification
+          <TicketScreen
             ticketNumber={ticketNumber}
             onEnter={() => setPhase('entry')}
           />
@@ -36,7 +43,10 @@ function AppInner() {
           transition={{ duration: 0.4 }}
           style={{ position: 'fixed', inset: 0, zIndex: 90 }}
         >
-          <PartyEntry onComplete={() => setPhase('party')} />
+          <TornTicketEntry
+            ticketNumber={ticketNumber}
+            onComplete={() => setPhase('party')}
+          />
         </motion.div>
       )}
 
@@ -45,10 +55,10 @@ function AppInner() {
           key="party"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.15 }}
           style={{ position: 'fixed', inset: 0, zIndex: 10 }}
         >
-          <NightclubScene />
+          <PartyScene />
         </motion.div>
       )}
     </AnimatePresence>

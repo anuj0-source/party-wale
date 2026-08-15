@@ -12,6 +12,15 @@ export interface Song {
 
 export const playlist: Song[] = [
   {
+    id: 'song-bomdiggy',
+    title: 'Bom Diggy Diggy',
+    artist: 'Zack Knight & Jasmin Walia',
+    youtubeId: 'yIIGQB6EMAM',
+    bpm: 105,
+    intensity: 'high',
+    bassDrops: [12, 35, 60, 85],
+  },
+  {
     id: 'song-0',
     title: 'Kala Chashma',
     artist: 'Amar Arshi',

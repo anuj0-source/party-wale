@@ -1,0 +1,337 @@
+/* src/components/MusicPill/MusicPill.css */
+
+.music-pill-wrapper {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 60;
+  pointer-events: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+/* The little wavy decoration above the pill */
+.music-pill-wrapper::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 8px;
+  background:
+    radial-gradient(circle at 8px 4px, var(--hot) 0 3px, transparent 4px),
+    radial-gradient(circle at 22px 4px, var(--mustard) 0 3px, transparent 4px),
+    radial-gradient(circle at 36px 4px, var(--leaf) 0 3px, transparent 4px),
+    radial-gradient(circle at 50px 4px, var(--cyan) 0 3px, transparent 4px);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.music-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px 10px 12px;
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 999px;
+  box-shadow:
+    4px 4px 0 var(--ink),
+    0 0 0 4px var(--mustard);
+  transform: rotate(-0.6deg);
+  position: relative;
+  max-width: min(94vw, 460px);
+  cursor: pointer;
+  transition: transform 0.15s var(--ease-paper);
+}
+.music-pill:hover { transform: rotate(-1.2deg) translateY(-1px); }
+.music-pill--playing { box-shadow: 4px 4px 0 var(--ink), 0 0 0 4px var(--leaf); }
+
+/* small dot */
+.music-pill-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--hot);
+  box-shadow: 0 0 0 2px var(--paper);
+  flex-shrink: 0;
+  animation: pw-pulse 0.8s ease-in-out infinite alternate;
+}
+.music-pill--playing .music-pill-dot { background: var(--leaf); }
+
+.music-pill-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.music-pill-artist {
+  font-family: 'Caveat', cursive;
+  font-size: 13px;
+  color: var(--maroon);
+  margin-left: -4px;
+  white-space: nowrap;
+}
+
+.music-pill-btn {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.12s;
+}
+.music-pill-btn:hover { background: rgba(20, 16, 28, 0.08); }
+.music-pill-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.music-pill-play {
+  width: 32px;
+  height: 32px;
+  background: var(--ink);
+  color: var(--mustard);
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+}
+.music-pill-play:hover { background: var(--maroon); color: var(--paper); }
+
+/* ── Listener count sticker below the pill ──────────────────────────── */
+.music-pill-listeners {
+  font-family: 'Caveat', cursive;
+  color: var(--mustard);
+  font-size: 16px;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+  transform: rotate(-2deg);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.music-pill-listeners-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--leaf);
+  box-shadow: 0 0 8px var(--leaf);
+  animation: pw-pulse 1.2s ease-in-out infinite alternate;
+}
+
+/* ── Share toast (transient) ────────────────────────────────────────── */
+.music-pill-share-toast {
+  position: absolute;
+  bottom: 64px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  font-family: 'Caveat', cursive;
+  font-size: 18px;
+  color: var(--ink);
+  background: var(--mustard);
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 2px solid var(--ink);
+  white-space: nowrap;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+/* ── Expanded panel ─────────────────────────────────────────────────── */
+.music-pill-expanded {
+  margin-top: 10px;
+  width: min(94vw, 460px);
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: 4px 4px 0 var(--ink);
+  padding: 14px 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-family: 'Inter', sans-serif;
+}
+
+.music-pill-expanded-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 8px;
+}
+.music-pill-expanded-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.music-pill-expanded-artist {
+  font-family: 'Caveat', cursive;
+  color: var(--maroon);
+  font-size: 16px;
+  margin-top: 2px;
+}
+.music-pill-expanded-close {
+  font-family: 'Caveat', cursive;
+  font-size: 22px;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+/* Seek */
+.music-pill-seek {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: rgba(20, 16, 28, 0.55);
+  font-variant-numeric: tabular-nums;
+}
+.music-pill-seek input[type='range'] {
+  flex: 1;
+  appearance: none;
+  background: transparent;
+  height: 16px;
+  margin: 0;
+}
+.music-pill-seek input[type='range']::-webkit-slider-runnable-track {
+  height: 4px;
+  background: linear-gradient(to right, var(--ink) var(--prog, 0%), rgba(20, 16, 28, 0.15) var(--prog, 0%));
+  border-radius: 2px;
+}
+.music-pill-seek input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--mustard);
+  border: 2px solid var(--ink);
+  margin-top: -4px;
+  cursor: pointer;
+}
+
+/* Controls */
+.music-pill-ctrls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.music-pill-ctrls-group {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.music-pill-ctrls-center {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.music-pill-big-play {
+  width: 44px;
+  height: 44px;
+  background: var(--ink);
+  color: var(--mustard);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background 0.12s;
+}
+.music-pill-big-play:hover { background: var(--maroon); }
+
+.music-pill-aux {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: rgba(20, 16, 28, 0.55);
+}
+.music-pill-aux input[type='range'] {
+  flex: 1;
+  appearance: none;
+  background: transparent;
+  height: 12px;
+}
+.music-pill-aux input[type='range']::-webkit-slider-runnable-track {
+  height: 3px;
+  background: rgba(20, 16, 28, 0.15);
+  border-radius: 2px;
+}
+.music-pill-aux input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--maroon);
+  margin-top: -3.5px;
+  cursor: pointer;
+}
+
+/* Playlist */
+.music-pill-playlist {
+  max-height: 160px;
+  overflow-y: auto;
+  border-top: 1.5px dashed rgba(20, 16, 28, 0.2);
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.music-pill-playlist-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.music-pill-playlist-row:hover { background: rgba(20, 16, 28, 0.06); }
+.music-pill-playlist-row--active {
+  background: rgba(246, 183, 60, 0.3);
+  font-weight: 700;
+}
+.music-pill-playlist-num {
+  font-variant-numeric: tabular-nums;
+  font-size: 10px;
+  color: rgba(20, 16, 28, 0.45);
+  width: 22px;
+}
+.music-pill-playlist-meta { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.music-pill-playlist-title {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.music-pill-playlist-artist {
+  font-family: 'Caveat', cursive;
+  font-size: 13px;
+  color: var(--maroon);
+}
+
+@media (max-width: 540px) {
+  .music-pill-title { max-width: 120px; font-size: 12px; }
+  .music-pill-artist { font-size: 12px; }
+}

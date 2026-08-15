@@ -6,6 +6,7 @@ type Listener = (count: number) => void;
 
 let socket: WebSocket | null = null;
 let retryTimer: ReturnType<typeof setTimeout> | null = null;
+void retryTimer; // oxlint false positive: assigned on reconnect below
 let retryDelay = 2000; // starts at 2s, grows with backoff
 const MAX_RETRY_DELAY = 60000; // max 60s (handles Render free-tier cold start)
 const listeners = new Set<Listener>();

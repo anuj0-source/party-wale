@@ -1,0 +1,121 @@
+/* src/components/PartyEntry/TornTicketEntry.css */
+
+.torn-entry {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 35%, #3a1a3a 0%, var(--ink) 100%);
+}
+
+/* Top half flies up and rotates */
+.torn-entry__top {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -100%) rotate(-6deg);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+  animation: torn-top 2.2s var(--ease-tear) forwards;
+}
+
+@keyframes torn-top {
+  0% {
+    transform: translate(-50%, 0) rotate(0);
+    opacity: 1;
+  }
+  10% {
+    transform: translate(-50%, -2%) rotate(0.5deg);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(-50%, -50%) rotate(-2deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -120vh) rotate(-8deg);
+    opacity: 0;
+  }
+}
+
+/* Bottom half falls down and rotates */
+.torn-entry__bottom {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 100%) rotate(6deg);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+  animation: torn-bottom 2.2s var(--ease-tear) forwards;
+}
+
+@keyframes torn-bottom {
+  0% {
+    transform: translate(-50%, 0) rotate(0);
+    opacity: 1;
+  }
+  10% {
+    transform: translate(-50%, 2%) rotate(-0.5deg);
+    opacity: 1;
+  }
+  25% {
+    transform: translate(-50%, 30%) rotate(2deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, 120vh) rotate(8deg);
+    opacity: 0;
+  }
+}
+
+/* Scene reveal behind the tear */
+.torn-entry__scene {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  background: url('/asthetic-bg.png') center center / cover no-repeat;
+  animation: torn-scene 2.2s ease-out forwards;
+}
+
+@keyframes torn-scene {
+  0%   { opacity: 0; transform: scale(0.96); }
+  35%  { opacity: 0; }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* Subtle floating debris particles while tearing */
+.torn-entry__debris {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.torn-entry__debris span {
+  position: absolute;
+  width: 8px;
+  height: 12px;
+  background: var(--paper);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  left: calc(50% - 4px);
+  top: 48%;
+  opacity: 0;
+  animation: torn-debris 2.0s ease-out forwards;
+}
+.torn-entry__debris span:nth-child(2) { left: 40%; transform: rotate(20deg); }
+.torn-entry__debris span:nth-child(3) { left: 60%; transform: rotate(-25deg); }
+.torn-entry__debris span:nth-child(4) { left: 46%; transform: rotate(8deg); }
+.torn-entry__debris span:nth-child(5) { left: 54%; transform: rotate(-12deg); }
+.torn-entry__debris span:nth-child(6) { left: 42%; transform: rotate(40deg); }
+
+@keyframes torn-debris {
+  0%   { opacity: 0; top: 48%; }
+  20%  { opacity: 1; }
+  100% { opacity: 0; top: 60%; }
+}
