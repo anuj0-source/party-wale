@@ -55,9 +55,9 @@ export async function artExists(path: string): Promise<boolean> {
   try {
     const res = await fetch(path, { method: 'HEAD' });
     const isImage = res.headers.get('content-type')?.includes('image');
-    const ok = res.ok && isImage;
+    const ok = Boolean(res.ok && isImage);
     cache.set(path, ok);
-    return !!ok;
+    return ok;
   } catch {
     cache.set(path, false);
     return false;

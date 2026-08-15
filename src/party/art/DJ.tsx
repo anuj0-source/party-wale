@@ -17,10 +17,7 @@ export function DJ({ className = '' }: DJProps) {
   useEffect(() => { artExists(art.djIdle).then(setHasArt); }, []);
 
   const variant = !isPlaying ? 'idle' : 'dance';
-  const src =
-    variant === 'bassdrop' ? art.djBassdrop
-    : variant === 'dance'   ? art.djDance
-    : art.djIdle;
+  const src = variant === 'dance' ? art.djDance : art.djIdle;
 
   return (
     <div
