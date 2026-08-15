@@ -81,9 +81,7 @@ export function Particles({ isPlaying, isMobile = false }: ParticlesProps) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       const target = isPlayingRef.current
-        ? bassDropRef.current
-          ? Math.floor(maxCount * 2.5)   // explosion
-          : Math.floor(maxCount * 0.6)   // gentle atmosphere
+        ? Math.floor(maxCount * 0.6)   // gentle atmosphere
         : Math.floor(maxCount * 0.08);   // nearly invisible idle
 
       // Spawn new particles to reach target
@@ -102,7 +100,7 @@ export function Particles({ isPlaying, isMobile = false }: ParticlesProps) {
         if (p.alpha <= 0 || p.y < -10) return false;
 
         ctx.save();
-        ctx.globalAlpha = p.alpha * (bassDropRef.current ? 0.85 : isPlayingRef.current ? 0.35 : 0.12);
+        ctx.globalAlpha = p.alpha * (isPlayingRef.current ? 0.35 : 0.12);
         ctx.fillStyle = p.color;
         ctx.shadowBlur = p.size * 4;
         ctx.shadowColor = p.color;
