@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start-backend":"node server/presence.js",
     "start": "concurrently \"vite\" \"node server/presence.js\"",
     "dev": "concurrently \"vite\" \"node server/presence.js\"",
     "server": "node server/presence.js",

@@ -10,6 +10,7 @@ import { YouTubePlayer } from '../YouTubePlayer/YouTubePlayer';
 import { MusicControls } from '../MusicControls/MusicControls';
 import { TicketModal } from '../TicketModal/TicketModal';
 import { ActiveUsers } from '../ActiveUsers/ActiveUsers';
+import { SocialLinks } from '../SocialLinks/SocialLinks';
 import './NightclubScene.css';
 
 export function NightclubScene() {
@@ -92,6 +93,9 @@ export function NightclubScene() {
 
       {/* ── Active Users Badge ── */}
       <ActiveUsers />
+
+      {/* ── Social Links (Top Right) ── */}
+      <SocialLinks />
 
       {/* ── Layer 8: Top bar (minimal) ── */}
       <div className="scene-topbar">
