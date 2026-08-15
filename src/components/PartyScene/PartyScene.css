@@ -18,6 +18,12 @@
   transition: transform 0.05s linear; /* tiny smoothing between RAF frames */
 }
 
+@media (max-width: 768px) {
+  .scene-bg {
+    background-image: url('/beach-bg.png');
+  }
+}
+
 /* Layer in the shake animation on top of the parallax when music plays */
 .party-scene.scene--party .scene-bg {
   animation: bg-groove 0.45s ease-in-out infinite alternate;
