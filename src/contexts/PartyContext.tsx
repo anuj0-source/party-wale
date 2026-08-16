@@ -77,6 +77,9 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
 
   const beatControllerRef = useRef<ReturnType<typeof createBeatController> | null>(null);
   const playerRef = useRef<YT.Player | null>(null);
+  // Tracks the user's latest intent so stale YT events don't override it.
+  // 'play' | 'pause' | null (null = no pending intent, trust YT events)
+  const userIntentRef = useRef<'play' | 'pause' | null>(null);
 
   const currentSong = playlist[currentSongIndex];
 
@@ -128,14 +131,29 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
 
   const handleStateChange = useCallback(
     (state: YT.PlayerState) => {
+      const intent = userIntentRef.current;
       switch (state) {
         case YT.PlayerState.PLAYING:
+          // If the user wanted to pause but a stale PLAYING event arrived
+          // (e.g. from a buffering→playing transition), re-issue the pause.
+          if (intent === 'pause') {
+            playerRef.current?.pauseVideo();
+            return; // Don't flip isPlaying – wait for the real PAUSED event.
+          }
+          userIntentRef.current = null; // Intent fulfilled
           setIsPlaying(true);
           setIsBuffering(false);
           setIsUnavailable(false);
           startBeatController(playlist[currentSongIndex]);
           break;
         case YT.PlayerState.PAUSED:
+          // If the user wanted to play but a stale PAUSED event arrived,
+          // re-issue the play.
+          if (intent === 'play') {
+            playerRef.current?.playVideo();
+            return;
+          }
+          userIntentRef.current = null; // Intent fulfilled
           setIsPlaying(false);
           setIsBuffering(false);
           stopBeatController();
@@ -145,6 +163,7 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
           setIsBuffering(true);
           break;
         case YT.PlayerState.ENDED:
+          userIntentRef.current = null;
           setIsPlaying(false);
           stopBeatController();
           skipToNext();
@@ -185,13 +204,15 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
   // ── Controls ──────────────────────────────────────────────────────────────
 
   const play = useCallback(() => {
+    userIntentRef.current = 'play';
+    setIsPlaying(true); // Optimistic for instant UI feedback
     playerRef.current?.playVideo();
-    setIsPlaying(true);
   }, []);
   
   const pause = useCallback(() => {
+    userIntentRef.current = 'pause';
+    setIsPlaying(false); // Optimistic for instant UI feedback
     playerRef.current?.pauseVideo();
-    setIsPlaying(false);
   }, []);
 
   const toggleShuffle = useCallback(() => {

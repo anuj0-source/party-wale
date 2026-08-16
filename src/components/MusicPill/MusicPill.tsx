@@ -9,7 +9,7 @@ import { copy } from '../../lib/copy';
 import { shareMessage } from '../../lib/shareMessage';
 import {
   IconPlay, IconPause, IconSkipBack, IconSkipForward,
-  IconShare, IconCheck, IconList, IconShuffle,
+  IconShare, IconCheck, IconList, IconShuffle, IconVolume,
 } from '../Icons/Icons';
 import { subscribeToPresence } from '../../lib/presenceSocket';
 import './MusicPill.css';
@@ -116,7 +116,14 @@ export function MusicPill() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <span className="music-pill-dot" />
+          <div className="music-pill-dvd-container music-pill-dvd--small">
+            <img 
+              src={`https://img.youtube.com/vi/${currentSong.youtubeId}/mqdefault.jpg`} 
+              className={`music-pill-dvd ${isPlaying ? 'spinning' : ''}`}
+              alt=""
+            />
+            <div className="music-pill-dvd-hole" />
+          </div>
           <span className="music-pill-title">{currentSong.title}</span>
           <span className="music-pill-artist">— {currentSong.artist}</span>
           <button
@@ -180,14 +187,24 @@ export function MusicPill() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="music-pill-expanded-header">
-              <div>
-                <div className="music-pill-expanded-title">{currentSong.title}</div>
-                <div className="music-pill-expanded-artist">— {currentSong.artist}</div>
-                {isUnavailable && (
-                  <div style={{ color: 'var(--hot)', fontSize: 11, marginTop: 4 }}>
-                    {copy.partyNoSong}
-                  </div>
-                )}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div className="music-pill-dvd-container">
+                  <img 
+                    src={`https://img.youtube.com/vi/${currentSong.youtubeId}/mqdefault.jpg`} 
+                    className={`music-pill-dvd ${isPlaying ? 'spinning' : ''}`}
+                    alt=""
+                  />
+                  <div className="music-pill-dvd-hole" />
+                </div>
+                <div>
+                  <div className="music-pill-expanded-title">{currentSong.title}</div>
+                  <div className="music-pill-expanded-artist">— {currentSong.artist}</div>
+                  {isUnavailable && (
+                    <div style={{ color: 'var(--hot)', fontSize: 11, marginTop: 4 }}>
+                      {copy.partyNoSong}
+                    </div>
+                  )}
+                </div>
               </div>
               <button
                 className="music-pill-expanded-close"
@@ -282,7 +299,7 @@ export function MusicPill() {
             </div>
 
             <div className="music-pill-aux">
-              <span>{copy.volume}</span>
+              <IconVolume size={13} />
               <input
                 type="range"
                 min={0}
