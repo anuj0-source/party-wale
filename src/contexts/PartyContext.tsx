@@ -125,7 +125,17 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
   );
 
   const skipToNext = useCallback(() => {
-    setCurrentSongIndex((prev) => (prev + 1) % playlist.length);
+    if (isShuffledRef.current) {
+      setCurrentSongIndex((prev) => {
+        let nextIndex: number;
+        do {
+          nextIndex = Math.floor(Math.random() * playlist.length);
+        } while (nextIndex === prev && playlist.length > 1);
+        return nextIndex;
+      });
+    } else {
+      setCurrentSongIndex((prev) => (prev + 1) % playlist.length);
+    }
     setIsUnavailable(false);
   }, []);
 
@@ -224,18 +234,8 @@ export function PartyProvider({ children }: { children: React.ReactNode }) {
 
   const next = useCallback(() => {
     stopBeatController();
-    if (isShuffledRef.current) {
-      // Pick a random song that is not the current one
-      let nextIndex: number;
-      do {
-        nextIndex = Math.floor(Math.random() * playlist.length);
-      } while (nextIndex === currentSongIndex && playlist.length > 1);
-      setCurrentSongIndex(nextIndex);
-      setIsUnavailable(false);
-    } else {
-      skipToNext();
-    }
-  }, [stopBeatController, skipToNext, currentSongIndex]);
+    skipToNext();
+  }, [stopBeatController, skipToNext]);
   const previous = useCallback(() => {
     stopBeatController();
     setCurrentSongIndex((prev) => (prev - 1 + playlist.length) % playlist.length);
